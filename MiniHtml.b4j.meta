@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=Main,Process_Globals,9,0,Main,GenerateHtml,20,6,MiniHtml,Class_Globals,0,0,MiniHtml,setFlat,16,0
+NavigationStack=Main,Process_Globals,9,0,MiniHtml,Class_Globals,0,0,MiniHtml,setTabs,11,0,Main,GenerateHtml,36,6
 SelectedBuild=0
 VisibleModules=1

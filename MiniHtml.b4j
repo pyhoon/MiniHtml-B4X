@@ -35,7 +35,6 @@ Sub GenerateHtml
 	html.Language("en")
 	html.Comment(" velocity.vm ")
 	html.Head
-	'html.Head0
 	html.Meta(html.Attrs(Array("http-equiv", "content"), Array("content-type", "text/html; charset=utf-8")))
 	html.Meta(html.Attrs(Array("name", "content"), Array("viewport", "width=device-width, initial-scale=1")))
 	html.Text("$csrf")
@@ -44,10 +43,8 @@ Sub GenerateHtml
 	html.Title("$APP_TITLE")
 	html.Headx
 	html.Body
-	'html.Body0
 	html.H1("Hello, World!")
 	html.Img("/img/hello.png")
-	'html.Img0
 	html.Bodyx
 	html.Htmlx
 	Dim content As String = html.ToString
