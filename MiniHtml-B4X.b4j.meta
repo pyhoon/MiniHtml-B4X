@@ -2,8 +2,8 @@
 ModuleBookmarks1=
 ModuleBreakpoints0=
 ModuleBreakpoints1=
-ModuleClosedNodes0=1
+ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=MiniHtml,TitleA,160,0,MiniHtml,Head,164,0,MiniHtml,Img,238,0,MiniHtml,Img0,241,0,Main,GenerateHtml,35,6,MiniHtml,Head0,176,0,MiniHtml,getToString,249,0,MiniHtml,DocType,255,0,MiniHtml,Language,257,0,MiniHtml,HtmlLang,263,0
+NavigationStack=Main,Process_Globals,9,0,Main,GenerateHtml,20,6,MiniHtml,Class_Globals,0,0,MiniHtml,setFlat,16,0
 SelectedBuild=0
 VisibleModules=1
