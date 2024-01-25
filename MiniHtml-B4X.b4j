@@ -1,0 +1,53 @@
+﻿AppType=StandardJava
+Build1=Default,b4j.example
+Group=Default Group
+Library1=jcore
+Module1=MiniHtml
+NumberOfFiles=0
+NumberOfLibraries=1
+NumberOfModules=1
+Version=10
+@EndOfDesignText@
+'Non-UI application (console / server application)
+#Region Project Attributes 
+	#CommandLineArgs:
+	#MergeLibraries: True 
+#End Region
+
+Sub Process_Globals
+	
+End Sub
+
+Sub AppStart (Args() As String)
+	GenerateHtml
+	StartMessageLoop
+End Sub
+
+Sub GenerateHtml
+	Dim html As MiniHtml
+	html.Initialize
+	'html.Flat = True
+	html.Text("#macro( header )")
+	html.DocType
+	html.Language("en")
+	html.Comment(" velocity.vm ")
+	html.Head
+	'html.Head0
+	html.Meta(html.Attrs(Array("http-equiv", "content"), Array("content-type", "text/html; charset=utf-8")))
+	html.Meta(html.Attrs(Array("name", "content"), Array("viewport", "width=device-width, initial-scale=1")))
+	html.Text("$csrf")
+	html.Meta(html.Attrs(Array("name", "content"), Array("description", "")))
+	html.Meta(html.Attrs(Array("name", "content"), Array("author", "")))
+	html.Title("$APP_TITLE")
+	html.Headx
+	html.Body
+	'html.Body0
+	html.H1("Hello, World!")
+	html.Img("/img/hello.png")
+	'html.Img0
+	html.Bodyx
+	html.Htmlx
+	Dim content As String = html.ToString
+	Log(content)
+	File.WriteString(File.DirApp, "velocity.vm", content)
+End Sub
