@@ -1,9 +1,12 @@
 ﻿ModuleBookmarks0=
 ModuleBookmarks1=
+ModuleBookmarks2=
 ModuleBreakpoints0=
 ModuleBreakpoints1=
+ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=Main,Process_Globals,9,0,MiniHtml,Class_Globals,0,0,MiniHtml,setTabs,11,0,Main,GenerateHtml,36,6
+ModuleClosedNodes2=
+NavigationStack=Tag,addText,109,2,Tag,addAttribute2,136,0,Tag,addAttribute,144,0,MiniHtml,Initialize,12,0,Main,AppStart,17,0,Tag,Build,88,6,Tag,clearMode,173,0,Tag,CreateTag,192,0,Tag,CreateModeTag,182,0,Main,GenerateHtml,51,6
 SelectedBuild=0
-VisibleModules=1
+VisibleModules=1,2

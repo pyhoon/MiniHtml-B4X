@@ -7,12 +7,21 @@ Version=10
 Sub Class_Globals
 	Private mBuilder As StringBuilder
 	Private mTabs As Int
+	'Private mMode As String
+	'Private mName As String
 	Private mFlat As Boolean
+	Private mChildren As List
+	Private mAttributes As Map
 	'Type HtmlTag (Name As String, Attributes As List, Children As List)
+	'Type Html_H1 (Attributes As B4XOrderedMap, Children As List)
 End Sub
 
-Public Sub Initialize
+Public Sub Initialize '(Name As String)
 	mBuilder.Initialize
+	mChildren.Initialize
+	mAttributes.Initialize
+	'mMode = "normal"
+	'mName = Name
 End Sub
 
 Public Sub setTabs (Value As Int)
@@ -52,20 +61,29 @@ Public Sub Text (mText As String)
 	If Not(mFlat) Then mBuilder.Append(CRLF)
 End Sub
 
-Public Sub Text2 (mText As String)
-	AddTab
-	mBuilder.Append(mText)
+'Public Sub Text2 (mText As String)
+'	AddTab
+'	mBuilder.Append(mText)
+'End Sub
+
+'Public Sub addText (Text As String) As String
+'	Return Text
+'End Sub
+
+Public Sub addTag (mTag As Tag)
+	Dim s As String = mTag.build(0)
+	mBuilder.Append(s)
 End Sub
 
-Public Sub Comment (mComment As String)
-	mBuilder.Append($"<!--${mComment}-->"$)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
-End Sub
+'Public Sub Comment (mComment As String)
+'	mBuilder.Append($"<!--${mComment}-->"$)
+'	If Not(mFlat) Then mBuilder.Append(CRLF)
+'End Sub
 
 ' no new line when ends
-Public Sub Comment2 (mComment As String)
-	mBuilder.Append($"<!--${mComment}-->"$)
-End Sub
+'Public Sub Comment2 (mComment As String)
+'	mBuilder.Append($"<!--${mComment}-->"$)
+'End Sub
 
 ' Key Value Pair
 Public Sub KV (Key As String, Value As String) As Map
@@ -116,29 +134,29 @@ Public Sub TextAttribute (Attributes As List) As String
 End Sub
 
 ' Single Line Tag without Attributes
-Public Sub Tag (mName As String)
-	AddTab
-	mBuilder.Append($"<${mName.ToLowerCase}>"$)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
-End Sub
+'Public Sub Tag (mName As String)
+'	AddTab
+'	mBuilder.Append($"<${mName.ToLowerCase}>"$)
+'	If Not(mFlat) Then mBuilder.Append(CRLF)
+'End Sub
 
-Public Sub TagA (mName As String, mAttributes As List) 'As String
-	Dim mText As String = TextAttribute(mAttributes)
-	Dim mAttribute As String = BuildAttributes(mAttributes)
-	Dim txt As String = $"<${mName.ToLowerCase}${mAttribute}>${mText}</${mName.ToLowerCase}>"$
-	AddTab
-	mBuilder.Append(txt)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
-End Sub
+'Public Sub TagA (Name As String, Attributes As List) 'As String
+'	Dim Str As String = TextAttribute(Attributes)
+'	Dim Attribute As String = BuildAttributes(Attributes)
+'	Dim txt As String = $"<${Name.ToLowerCase}${Attribute}>${Str}</${Name.ToLowerCase}>"$
+'	AddTab
+'	mBuilder.Append(txt)
+'	If Not(mFlat) Then mBuilder.Append(CRLF)
+'End Sub
 
-Public Sub TagB (mName As String, mAttributes As List) 'As String
-	Dim txt As String = $"<${mName.ToLowerCase}"$
-	txt = txt & BuildAttributes(mAttributes)
-	txt = txt & $" />"$
-	AddTab
-	mBuilder.Append(txt)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
-End Sub
+'Public Sub TagB (mName As String, mAttributes As List) 'As String
+'	Dim txt As String = $"<${mName.ToLowerCase}"$
+'	txt = txt & BuildAttributes(mAttributes)
+'	txt = txt & $" />"$
+'	AddTab
+'	mBuilder.Append(txt)
+'	If Not(mFlat) Then mBuilder.Append(CRLF)
+'End Sub
 
 Public Sub Tagx (mName As String)
 	TabsDecrease
@@ -154,100 +172,118 @@ Public Sub Divx
 	If Not(mFlat) Then mBuilder.Append(CRLF)
 End Sub
 
-Public Sub Meta (mAttributes As List)
-	TagB("meta", mAttributes)
-End Sub
+'Public Sub Meta (mAttributes As List)
+'	TagB("meta", mAttributes)
+'End Sub
 
-Public Sub Title (mText As String)
-	TagA("title", Attr("Text", mText))
-End Sub
+'Public Sub Meta_Default
+'	Meta_Charset_Utf8
+'	Meta_Compatible_IE
+'	Meta_ViewPort
+'End Sub
 
-Public Sub TitleA (mAttributes As List)
-	TagA("title", mAttributes)
-End Sub
+'Public Sub Meta_Charset_Utf8
+'	Meta(Array(KV("charset", "UTF-8")))
+'End Sub
+'
+'Public Sub Meta_Compatible_IE
+'	Meta(Array(KV("http-equiv", "X-UA-Compatible"), KV("content", "IE=edge")))
+'End Sub
+'
+'Public Sub Meta_ViewPort
+'	Meta(Array(KV("name", "viewport"), KV("content", "width=device-width, initial-scale=1.0")))
+'End Sub
+'
+'Public Sub Title (mText As String)
+'	TagA("title", Attr("Text", mText))
+'End Sub
+'
+'Public Sub TitleA (mAttributes As List)
+'	TagA("title", mAttributes)
+'End Sub
 
 ' Tag without Attributes
-Public Sub Head
-	Tag("head")
-	TabsIncrease
-End Sub
+'Public Sub Head
+'	Tag("head")
+'	TabsIncrease
+'End Sub
 
-Public Sub HeadA (mAttributes As List)
-	TagA("head", mAttributes)
-End Sub
-
-' Not increase indent
-Public Sub Head0
-	Dim FlatSetting As Boolean = mFlat
-	mFlat = True
-	Tag("head")
-	If Not(FlatSetting) Then mBuilder.Append(CRLF)
-	mFlat = FlatSetting
-End Sub
-
-Public Sub Headx
-	Tagx("head")
-End Sub
-
-' Single Line Tag without Attributes
-Public Sub Body
-	Tag("body")
-	TabsIncrease
-End Sub
-
-Public Sub BodyA (mAttributes As List)
-	TagA("body", mAttributes)
-End Sub
-
-' Single Line Tag without Attributes
-Public Sub BodyB
-	Tag("body")
-End Sub
+'Public Sub HeadA (mAttributes As List)
+'	TagA("head", mAttributes)
+'End Sub
 
 ' Not increase indent
-Public Sub Body0
-	Dim FlatSetting As Boolean = mFlat
-	mFlat = True
-	Tag("body")
-	If Not(FlatSetting) Then mBuilder.Append(CRLF)
-	mFlat = FlatSetting
-End Sub
+'Public Sub Head0
+'	Dim FlatSetting As Boolean = mFlat
+'	mFlat = True
+'	Tag("head")
+'	If Not(FlatSetting) Then mBuilder.Append(CRLF)
+'	mFlat = FlatSetting
+'End Sub
 
-Public Sub Bodyx
-	Tagx("body")
-End Sub
-
-Public Sub H1 (mText As String)
-	TagA("h1", Attr("Text", mText))
-End Sub
-
-Public Sub H1A (mName As String, mAttributes As List)
-	Dim txt As String = $"<${mName.ToLowerCase}"$
-	txt = txt & BuildAttributes(mAttributes)
-	txt = txt & $" />"$
-	AddTab
-	mBuilder.Append(txt)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
-End Sub
+'Public Sub Headx
+'	Tagx("head")
+'End Sub
 
 ' Single Line Tag without Attributes
-Public Sub H1B
-	Tag("h1")
-End Sub
+'Public Sub Body
+'	Tag("body")
+'	TabsIncrease
+'End Sub
 
-Public Sub H1x
-	Tagx("h1")
-End Sub
+'Public Sub BodyA (mAttributes As List)
+'	TagA("body", mAttributes)
+'End Sub
+
+' Single Line Tag without Attributes
+'Public Sub BodyB
+'	Tag("body")
+'End Sub
+
+' Not increase indent
+'Public Sub Body0
+'	Dim FlatSetting As Boolean = mFlat
+'	mFlat = True
+'	Tag("body")
+'	If Not(FlatSetting) Then mBuilder.Append(CRLF)
+'	mFlat = FlatSetting
+'End Sub
+
+'Public Sub Bodyx
+'	Tagx("body")
+'End Sub
+
+'Public Sub H1 (mText As String)
+'	TagA("h1", Attr("Text", mText))
+'End Sub
+
+'Public Sub H1A (mName As String, mAttributes As List)
+'	Dim txt As String = $"<${mName.ToLowerCase}"$
+'	txt = txt & BuildAttributes(mAttributes)
+'	txt = txt & $" />"$
+'	AddTab
+'	mBuilder.Append(txt)
+'	If Not(mFlat) Then mBuilder.Append(CRLF)
+'End Sub
+
+' Single Line Tag without Attributes
+'Public Sub H1B
+'	Tag("h1")
+'End Sub
+
+'Public Sub H1x
+'	Tagx("h1")
+'End Sub
 
 ' returns <code><img src="/img.png" /></code>
-Public Sub Img (mSrc As String)
-	TagB("img", Attr("src", mSrc))
-End Sub
+'Public Sub Img (mSrc As String)
+'	TagB("img", Attr("src", mSrc))
+'End Sub
 
 ' returns <code><img></code>
-Public Sub Img0
-	Tag("img")
-End Sub
+'Public Sub Img0
+'	Tag("img")
+'End Sub
 
 Public Sub getToString As String
 	Return mBuilder.ToString
@@ -271,12 +307,13 @@ Public Sub HtmlLang (Value As String) 'As String
 End Sub
 
 Public Sub Htmlx
-	mBuilder.Append($"</html>"$)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
+	Tagx("html")
 End Sub
 
-Public Sub Meta_Default
-	Meta(Array(KV("charset", "UTF-8")))
-	Meta(Array(KV("http-equiv", "X-UA-Compatible"), KV("content", "IE=edge")))
-	Meta(Array(KV("name", "viewport"), KV("content", "width=device-width, initial-scale=1.0")))
-End Sub
+'Public Sub CreateHtml_H1 (Attributes As B4XOrderedMap, Children As List) As Html_H1
+'	Dim t1 As Html_H1
+'	t1.Initialize
+'	t1.Attributes = Attributes
+'	t1.Children = Children
+'	Return t1
+'End Sub

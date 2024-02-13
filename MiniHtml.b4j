@@ -2,10 +2,12 @@
 Build1=Default,b4j.example
 Group=Default Group
 Library1=jcore
+Library2=b4xcollections
 Module1=MiniHtml
+Module2=Tag
 NumberOfFiles=0
-NumberOfLibraries=1
-NumberOfModules=1
+NumberOfLibraries=2
+NumberOfModules=2
 Version=10
 @EndOfDesignText@
 'Non-UI application (console / server application)
@@ -13,7 +15,7 @@ Version=10
 	#CommandLineArgs:
 	#MergeLibraries: True
 	#LibraryName: MiniHtml
-	#LibraryVersion: 0.01
+	#LibraryVersion: 0.02
 	#LibraryAuthor: Aeric
 #End Region
 
@@ -27,27 +29,95 @@ Sub AppStart (Args() As String)
 End Sub
 
 Sub GenerateHtml
-	Dim html As MiniHtml
-	html.Initialize
-	'html.Flat = True
-	html.Text("#macro( header )")
-	html.DocType
-	html.Language("en")
-	html.Comment(" velocity.vm ")
-	html.Head
-	html.Meta(html.Attrs(Array("http-equiv", "content"), Array("content-type", "text/html; charset=utf-8")))
-	html.Meta(html.Attrs(Array("name", "content"), Array("viewport", "width=device-width, initial-scale=1")))
-	html.Text("$csrf")
-	html.Meta(html.Attrs(Array("name", "content"), Array("description", "")))
-	html.Meta(html.Attrs(Array("name", "content"), Array("author", "")))
-	html.Title("$APP_TITLE")
-	html.Headx
-	html.Body
-	html.H1("Hello, World!")
-	html.Img("/img/hello.png")
-	html.Bodyx
-	html.Htmlx
-	Dim content As String = html.ToString
+'	Dim html As MiniHtml
+'	html.Initialize
+'	'html.Flat = True
+'	html.Text("#macro( header )")
+'	html.DocType
+'	html.Language("en")
+'	html.Comment(" velocity.vm ")
+'#Region Head
+'	html.Head
+'	html.Meta_Default
+'	html.Text("$csrf")
+'	html.Meta(Array(CreateMap("name": "description"), CreateMap("content": "")))
+'	html.Meta(Array(CreateMap("name": "author"), CreateMap("content": "")))
+'	html.Title("$APP_TITLE")
+'	html.Headx
+'#End Region
+'	html.Body
+'	html.H1("Hello, World!")
+'	html.Img("/img/hello.png")
+'	html.Bodyx
+'	html.Htmlx
+'	Dim content As String = html.ToString
+'	Log(content)
+'	File.WriteString(File.DirApp, "velocity.vm", content)
+	
+	Dim doc As MiniHtml
+	doc.Initialize
+	'doc.Flat = True
+	doc.Text("#macro( header )")
+	doc.DocType
+	
+	Dim html As Tag
+	html.Initialize("html")
+	
+	html.addTag(html.CreateNoTag.addComment(" velocity.vm "))
+	html.addAttribute("lang", "en")
+	
+	Dim head As Tag
+	head.Initialize("head")
+	
+	html.CreateModeTag("meta") _
+	.addAttribute("charset", "UTF-8") _
+	.addTo(head)
+
+	html.CreateModeTag("meta") _
+	.addAttribute("name", "viewport") _
+	.addAttribute2("content", Array As String("width=device-width", "initial-scale=1.0")) _
+	.addTo(head)
+	
+	html.CreateModeTag("meta") _
+	.addAttribute("http-equiv", "X-UA-Compatible") _
+	.addAttribute("content", "IE=edge") _
+	.addTo(head)
+	
+	html.CreateNoTag _
+	.addRaw("$csrf") _
+	.addTo(head)
+
+	html.CreateModeTag("title") _
+	.addText("$APP_TITLE") _
+	.addTo(head)
+	
+	Dim stylesheets() As String = Array As String("../styles/style.css", "../styles/bootstrap.css")
+	
+	For Each style In stylesheets
+		html.CreateModeTag("link") _
+		.addAttribute("rel", "stylesheet") _
+		.addAttribute("href", style) _
+		.addTo(head)
+	Next
+	html.addTag(head)
+	
+	Dim body As Tag
+	body.Initialize("body")
+	body.addAttribute("class", "fixed-navbar fixed-sidebar")
+	
+	html.CreateTag("h1", html.mUniline).addText("Hello, World!").addTo(body)
+	html.CreateTag("img", html.mUniline).addAttribute("src", "/img/hello.png").specialMode("link").addTo(body)
+	Dim div1 As Tag = html.CreateTag("div", html.mNormal).addAttribute("id", "d1").addAttribute("style", "color: blue;")
+	div1.addTo(body)
+	Dim div2 As Tag = html.CreateTag("div", html.mUniline).addAttribute("id", "d2").addText("Test").addAttribute("disabled", "")
+	div2.addTo(div1)
+	
+	body.addTo(html)
+	
+	doc.Text(html.Build(-1))
+
+	Dim content As String = doc.ToString
 	Log(content)
-	File.WriteString(File.DirApp, "velocity.vm", content)
+	'Log(html.GetListOfTags)
+	File.WriteString(File.DirApp, "velocity.html", content)
 End Sub
