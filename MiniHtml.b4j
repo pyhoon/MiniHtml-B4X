@@ -3,11 +3,19 @@ Build1=Default,b4j.example
 Group=Default Group
 Library1=b4xcollections
 Library2=jcore
-Module1=Document
-Module2=Tag
+Module1=Body
+Module10=Tag
+Module2=Div
+Module3=Document
+Module4=H1
+Module5=Head
+Module6=Html
+Module7=Img
+Module8=Meta
+Module9=P
 NumberOfFiles=0
 NumberOfLibraries=2
-NumberOfModules=2
+NumberOfModules=10
 Version=10
 @EndOfDesignText@
 'Non-UI application (console / server application)
@@ -15,7 +23,7 @@ Version=10
 	#CommandLineArgs:
 	#MergeLibraries: True
 	#LibraryName: MiniHtml
-	#LibraryVersion: 0.03
+	#LibraryVersion: 0.04
 	#LibraryAuthor: Aeric
 #End Region
 
@@ -24,49 +32,32 @@ Sub Process_Globals
 End Sub
 
 Sub AppStart (Args() As String)
-	GenerateHtml
-	StartMessageLoop
-End Sub
-
-Sub GenerateHtml
 	Dim doc As Document
 	doc.Initialize
-	'doc.Flat = True
 	doc.Append("#macro( header )")
 	doc.AppendDocType
 	doc.Append(TAB)
-	
-	Dim html As Tag
-	html.Initialize("html").addAttribute("lang", "en")
-	html.comment(" velocity.vm ")
-	Dim head1 As Tag
-	head1.Initialize("head").up(html)
-	head1.meta("charset", "UTF-8")
-	head1.meta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1.0"))
-	head1.meta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
-	head1.raw2("$csrf")
-	head1.title("$APP_TITLE")
-	head1.link(CreateMap("rel": "stylesheet", "href": "../styles/style.css"))
-	head1.link(CreateMap("rel": "stylesheet", "href": "../styles/bootstrap.css"))
-
-	Dim body1 As Tag
-	body1.Initialize("body").addAttribute("class", "fixed-navbar fixed-sidebar").up(html)
-	
-	Dim main1 As Tag
-	main1.Initialize("main").up(body1)
-	Dim h1 As Tag
-	h1.Initialize("h1").addText("Hello, World!").up(main1)
-	Dim img1 As Tag
-	img1.Initialize("img").addAttribute("src", "/img/hello.png").up(main1)
-	Dim div1 As Tag
-	div1.Initialize("div").addAttributes(CreateMap("id": "d1", "style": "color: blue;")).up(main1)
-
-	Dim p1 As Tag
-	p1.Initialize("p").addText("This is a paragraph").Uniline.up(div1)
-	Dim div2 As Tag
-	div2.Initialize("div").addAttributes(CreateMap("id": "d2", "disabled": "")).Uniline.addText("Test").up(div1)
-	
-	doc.Append(html.Build(-1))
+	doc.Append(GenerateHtml)
 	Dim content As String = doc.ToString
+	Log(content)
 	File.WriteString(File.DirApp, "velocity.html", content)
+	StartMessageLoop
+End Sub
+
+Sub GenerateHtml As String
+	Dim html1 As Tag = Html.lang("en")
+	html1.comment(" velocity.vm ")
+	Head.up(html1) _
+	.Meta_Preset _
+	.Raw("$csrf") _
+	.Title("$APP_TITLE") _
+	.Link(CreateMap("rel": "stylesheet", "href": "../styles/bootstrap.min.css"))
+	Dim body1 As Tag = Body.up(html1).attribute("class", "fixed-navbar fixed-sidebar")
+	Dim main1 As Tag = Html.create("main").up(body1)
+	H1.Text("Hello, World!").up(main1)
+	Img.src("/img/hello.png").up(main1)
+	Dim div1 As Tag = Div.up(main1).attribute("id", "d1").attribute("style", "color: blue;")
+	P.Text("This is a paragraph").Uniline.up(div1)
+	Div.up(div1).attribute("id", "d2").attribute("disabled", "").Uniline.Text("Test")
+	Return html1.Build(-1)
 End Sub

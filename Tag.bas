@@ -11,11 +11,10 @@ Sub Class_Globals
 	Private mMode As String
 	Private innerTags As List
 	Private mAttributes As Map
-	'Private mClass As String
 	Private mClasses As List
 	Private mStyles As Map
 	Private mFlat As Boolean
-	Public Const mUniline 	As String = "uniline" ' <tag></tag>
+	Public Const mUniline 	As String = "uniline" 	' <tag></tag>
 	Public Const mNormal 	As String = "normal"	' <tag></tag> (multiline)
 	Public Const mLink 		As String = "link"		' <tag />
 	Public Const mMeta 		As String = "meta"		' <meta>
@@ -116,84 +115,73 @@ Public Sub innerTag (index As Int) As Tag
 	Return innerTags.Get(index)
 End Sub
 
-Public Sub addText (tText As String) As Tag
-	innerTags.Add(tText)
+Public Sub PrintInnerTags
+	For Each item In innerTags
+		'Log(GetType(item))
+		If item Is Tag Then
+			Log(item.As(Tag).IsInitialized & "[" & item.As(Tag).Name & "]")
+		Else If item Is String Then
+			Log(item)
+		Else
+			Log(GetType(item))	
+		End If
+	Next
+End Sub
+
+Public Sub comment (value As String) As Tag
+	innerTags.Add(Html.create(""))
+	innerTags.Add($"<!--${value}-->"$)
+	'PrintInnerTags
+	Return Me
+End Sub
+Public Sub comment2 (value As String) As Tag
+	innerTags.Add($"<!--${value}-->"$)
 	Return Me
 End Sub
 
-'Public Sub addSource (tText As String) As Tag
-'	mAttributes.Put("src", tText)
-'	Return Me
-'End Sub
+Public Sub addMeta (key As String, value As String)
+	innerTags.Add(Html.create("meta").attribute(key, value))
+End Sub
 
-Public Sub comment (Text As String) As Tag
-	Dim tag1 As Tag
-	tag1.Initialize("")
-	tag1.addText($"<!--${Text}-->"$)
-	innerTags.Add(tag1)
+Public Sub addMeta2 (keyvals As Map)
+	innerTags.Add(Html.create("meta").attribute2(keyvals))
+End Sub
+
+Public Sub Meta_Preset As Tag
+	addMeta("charset", "UTF-8")
+	addMeta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1.0"))
+	addMeta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
 	Return Me
 End Sub
 
-Public Sub meta (attrName As String, attrValue As String)
-	Dim tag1 As Tag
-	tag1.Initialize("meta") _
-	.addAttribute(attrName, attrValue)
-	innerTags.Add(tag1)
-End Sub
-
-Public Sub meta2 (attrs As Map)
-	Dim tag1 As Tag
-	tag1.Initialize("meta") _
-	.addAttributes(attrs)
-	innerTags.Add(tag1)
-End Sub
-
-Public Sub meta_preset (attrs As Map)
-	Dim tag1 As Tag
-	tag1.Initialize("meta") _
-	.addAttributes(attrs)
-	innerTags.Add(tag1)
-End Sub
-
-Public Sub link (attrs As Map) As Tag
-	Dim tag1 As Tag
-	tag1.Initialize("link") _
-	.ChangeMode("link") _
-	.addAttributes(attrs)
-	innerTags.Add(tag1)
+Public Sub Link (keyvals As Map) As Tag
+	innerTags.Add(Html.create("link").attribute2(keyvals))
 	Return Me
-End Sub
-
-Public Sub addRaw (Text As String) 'As Tag
-	'mMode = ""
-	innerTags.Add(Text)
-	'Return Me
-End Sub
-
-Public Sub raw (Text As String) 'As Tag
-	'Return addRaw(Text)
-	addRaw(Text)
 End Sub
 
 ' raw with CRLF
-Public Sub raw2 (Text As String) As Tag
-	Dim tag1 As Tag
-	tag1.Initialize("")
-	tag1.addText(Text)
-	innerTags.Add(tag1)
+Public Sub Raw (value As String) As Tag
+	innerTags.Add(Html.create(""))
+	innerTags.Add(value)
 	Return Me
 End Sub
 
-Public Sub newline 'As Tag
-	addRaw(CRLF)
+Public Sub Raw2 (value As String)
+	innerTags.Add(value)
 End Sub
 
-Public Sub title (Text As String) As Tag
-	Dim tag1 As Tag
-	tag1.Initialize("title") _
-	.ChangeMode("uniline") _
-	.addText(Text)
-	innerTags.Add(tag1)
+Public Sub Text (value As String) As Tag
+	'innerTags.Add(Html.create("").Text(value))
+	innerTags.Add(value)
+	Return Me
+End Sub
+
+Public Sub newline
+	Raw("")
+End Sub
+
+Public Sub Title (value As String) As Tag
+	innerTags.Add(Html.create("title").Text(value))
 	Return Me
 End Sub
 
@@ -210,70 +198,80 @@ Public Sub Tags As List
 	Return innerTags
 End Sub
 
-' Add a Child without returning parent tag
-Public Sub add (Child As Tag)
-	innerTags.Add(Child)
-End Sub
-
-' Add to Parent
-Public Sub addTo (Parent As Tag)
-	Parent.addChild(Me)
-End Sub
-
-' Add a Child and return the parent tag
-Public Sub addChild (Child As Tag) As Tag
+' Add a Child and return parent tag
+Public Sub add (Child As Tag) As Tag
 	innerTags.Add(Child)
 	Return Me
+End Sub
+
+' Add a Child without returning parent tag
+Public Sub add2 (Child As Tag)
+	innerTags.Add(Child)
+End Sub
+
+' Add to Parent and return parent tag
+Public Sub addTo (Parent As Tag) As Tag
+	Parent.add(Me)
+	Return Me
+End Sub
+
+' Add to Parent without returning parent tag
+Public Sub addTo2 (Parent As Tag)
+	Parent.add(Me)
 End Sub
 
 ' same as addTo
-Public Sub up (Parent As Tag)
-	Parent.addChild(Me)
+Public Sub up (Parent As Tag) As Tag
+	Return addTo(Parent)
 End Sub
 
-' Same as addChild
+' same as addTo2
+Public Sub up2 (Parent As Tag)
+	addTo2(Parent)
+End Sub
+
+' Same as add
 Public Sub down (Child As Tag) As Tag
-	Return addChild(Child)
+	Return add(Child)
 End Sub
 
-Public Sub addAttribute (attrName As String, attrValue As String) As Tag
-	mAttributes.Put(attrName, attrValue)
+' Same as add2
+Public Sub down2 (Child As Tag)
+	add2(Child)
+End Sub
+
+' Add an attribute
+Public Sub attribute (key As String, value As String) As Tag
+	mAttributes.Put(key, value)
 	Return Me
 End Sub
 
-Public Sub getAttribute (key As String) As String
-	'Return addAttribute(attrName, attrValue)
-	Return mAttributes.Get(key)
-End Sub
-
-Public Sub addAttributes (attrs As Map) As Tag
-	For Each Key As String In attrs.Keys
-		Dim Value As String = attrs.Get(Key)
-		mAttributes.Put(Key, Value)
+' Add multiple attributes
+Public Sub attribute2 (keyvals As Map) As Tag
+	For Each key As String In keyvals.Keys
+		Dim value As String = keyvals.Get(key)
+		mAttributes.Put(key, value)
 	Next
 	Return Me
 End Sub
 
+' Return maps of attributes
 Public Sub getAttributes As Map
-	'Return addAttributes(attrs)
 	Return mAttributes
 End Sub
 
-Public Sub removeAttribute (attrName As String) As Tag
-	'attributes.Remove(attrName)
-	mAttributes.Remove(attrName)
-	Return Me
-End Sub
-
-Public Sub addClass (className As String) As Tag
-	If mClasses.IndexOf(className) < 0 Then mClasses.Add(className)
-	'mClasses.Sort(True)
+Public Sub addClass (name As String) As Tag
+	Dim names() As String = Regex.Split(" ", name)
+	For Each subname As String In names
+		If mClasses.IndexOf(subname) < 0 Then mClasses.Add(subname)
+	Next
+	mClasses.Sort(True)
 	mAttributes.Put("class", mClasses)
 	Return Me
 End Sub
 
-Public Sub removeClass (className As String) As Tag
-	If mClasses.IndexOf(className) > -1 Then mClasses.RemoveAt(mClasses.IndexOf(className))
+Public Sub removeClass (name As String) As Tag
+	If mClasses.IndexOf(name) > -1 Then mClasses.RemoveAt(mClasses.IndexOf(name))
 	If mClasses.Size = 0 Then
 		mAttributes.Remove("class")
 	Else
@@ -310,15 +308,6 @@ Public Sub StylesAsString As String
 	Return MapToString(mStyles, ";")
 End Sub
 
-'Accepted values
-'meta 
-'link
-'normal
-Public Sub ChangeMode (TagMode As String) As Tag
-	mMode = TagMode.ToLowerCase
-	Return Me
-End Sub
-
 Public Sub setMode (TagMode As String)
 	mMode = TagMode.ToLowerCase
 End Sub
@@ -327,7 +316,7 @@ Public Sub getMode As String
 	Return mMode
 End Sub
 
-Public Sub Uniline As Tag
+Public Sub uniline As Tag
 	mMode = mUniline
 	Return Me
 End Sub
