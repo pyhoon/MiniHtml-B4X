@@ -6,7 +6,6 @@
 Sub GenerateHtml
 	Dim doc As Document
 	doc.Initialize
-	'doc.Flat = True
 	doc.Append("#macro( header )")
 	doc.AppendDocType
 	doc.Append(TAB)
@@ -15,8 +14,7 @@ Sub GenerateHtml
 	html.Initialize("html").addAttribute("lang", "en")
 	html.comment(" velocity.vm ")
 	Dim head1 As Tag
-	head1.Initialize("head")
-	head1.up(html)
+	head1.Initialize("head").up(html)
 	head1.meta("charset", "UTF-8")
 	head1.meta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1.0"))
 	head1.meta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
@@ -26,8 +24,7 @@ Sub GenerateHtml
 	head1.link(CreateMap("rel": "stylesheet", "href": "../styles/bootstrap.css"))
 
 	Dim body1 As Tag
-	body1.Initialize("body") _
-	.addAttribute("class", "fixed-navbar fixed-sidebar").up(html)
+	body1.Initialize("body").addAttribute("class", "fixed-navbar fixed-sidebar").up(html)
 	
 	Dim main1 As Tag
 	main1.Initialize("main").up(body1)
@@ -36,9 +33,7 @@ Sub GenerateHtml
 	Dim img1 As Tag
 	img1.Initialize("img").addAttribute("src", "/img/hello.png").up(main1)
 	Dim div1 As Tag
-	div1.Initialize("div") _
-	.addAttributes(CreateMap("id": "d1", "style": "color: blue;"))
-	div1.up(main1)
+	div1.Initialize("div").addAttributes(CreateMap("id": "d1", "style": "color: blue;")).up(main1)
 
 	Dim p1 As Tag
 	p1.Initialize("p").addText("This is a paragraph").Uniline.up(div1)
@@ -46,9 +41,7 @@ Sub GenerateHtml
 	div2.Initialize("div").addAttributes(CreateMap("id": "d2", "disabled": "")).Uniline.addText("Test").up(div1)
 	
 	doc.Append(html.Build(-1))
-
 	Dim content As String = doc.ToString
-	Log(content)
 	File.WriteString(File.DirApp, "velocity.html", content)
 End Sub
 ```
@@ -58,6 +51,7 @@ End Sub
 #macro( header )
 <!DOCTYPE html>
 	
+
 <html lang="en">
 	<!-- velocity.vm -->
 	<head>
@@ -80,4 +74,5 @@ End Sub
 		</main>
 	</body>
 </html>
+
 ```
