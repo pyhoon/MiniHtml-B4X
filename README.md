@@ -4,67 +4,48 @@
 ## Sample:
 ```BASIC
 Sub GenerateHtml
-	Dim doc As MiniHtml
+	Dim doc As Document
 	doc.Initialize
 	'doc.Flat = True
-	doc.Text("#macro( header )")
-	doc.DocType
+	doc.Append("#macro( header )")
+	doc.AppendDocType
+	doc.Append(TAB)
 	
 	Dim html As Tag
-	html.Initialize("html")
-	
-	html.addTag(html.CreateNoTag.addComment(" velocity.vm "))
-	html.addAttribute("lang", "en")
-	
-	Dim head As Tag
-	head.Initialize("head")
-	
-	html.CreateModeTag("meta") _
-	.addAttribute("charset", "UTF-8") _
-	.addTo(head)
+	html.Initialize("html").addAttribute("lang", "en")
+	html.comment(" velocity.vm ")
+	Dim head1 As Tag
+	head1.Initialize("head")
+	head1.up(html)
+	head1.meta("charset", "UTF-8")
+	head1.meta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1.0"))
+	head1.meta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
+	head1.raw2("$csrf")
+	head1.title("$APP_TITLE")
+	head1.link(CreateMap("rel": "stylesheet", "href": "../styles/style.css"))
+	head1.link(CreateMap("rel": "stylesheet", "href": "../styles/bootstrap.css"))
 
-	html.CreateModeTag("meta") _
-	.addAttribute("name", "viewport") _
-	.addAttribute2("content", Array As String("width=device-width", "initial-scale=1.0")) _
-	.addTo(head)
+	Dim body1 As Tag
+	body1.Initialize("body") _
+	.addAttribute("class", "fixed-navbar fixed-sidebar").up(html)
 	
-	html.CreateModeTag("meta") _
-	.addAttribute("http-equiv", "X-UA-Compatible") _
-	.addAttribute("content", "IE=edge") _
-	.addTo(head)
-	
-	html.CreateNoTag _
-	.addRaw("$csrf") _
-	.addTo(head)
+	Dim main1 As Tag
+	main1.Initialize("main").up(body1)
+	Dim h1 As Tag
+	h1.Initialize("h1").addText("Hello, World!").up(main1)
+	Dim img1 As Tag
+	img1.Initialize("img").addAttribute("src", "/img/hello.png").up(main1)
+	Dim div1 As Tag
+	div1.Initialize("div") _
+	.addAttributes(CreateMap("id": "d1", "style": "color: blue;"))
+	div1.up(main1)
 
-	html.CreateModeTag("title") _
-	.addText("$APP_TITLE") _
-	.addTo(head)
+	Dim p1 As Tag
+	p1.Initialize("p").addText("This is a paragraph").Uniline.up(div1)
+	Dim div2 As Tag
+	div2.Initialize("div").addAttributes(CreateMap("id": "d2", "disabled": "")).Uniline.addText("Test").up(div1)
 	
-	Dim stylesheets() As String = Array As String("../styles/style.css", "../styles/bootstrap.css")
-	
-	For Each style In stylesheets
-		html.CreateModeTag("link") _
-		.addAttribute("rel", "stylesheet") _
-		.addAttribute("href", style) _
-		.addTo(head)
-	Next
-	html.addTag(head)
-	
-	Dim body As Tag
-	body.Initialize("body")
-	body.addAttribute("class", "fixed-navbar fixed-sidebar")
-	
-	html.CreateTag("h1", html.mUniline).addText("Hello, World!").addTo(body)
-	html.CreateTag("img", html.mUniline).addAttribute("src", "/img/hello.png").specialMode("link").addTo(body)
-	Dim div1 As Tag = html.CreateTag("div", html.mNormal).addAttribute("id", "d1").addAttribute("style", "color: blue;")
-	div1.addTo(body)
-	Dim div2 As Tag = html.CreateTag("div", html.mUniline).addAttribute("id", "d2").addText("Test").addAttribute("disabled", "")
-	div2.addTo(div1)
-	
-	body.addTo(html)
-	
-	doc.Text(html.Build(-1))
+	doc.Append(html.Build(-1))
 
 	Dim content As String = doc.ToString
 	Log(content)
@@ -76,7 +57,7 @@ End Sub
 ```HTML
 #macro( header )
 <!DOCTYPE html>
-
+	
 <html lang="en">
 	<!-- velocity.vm -->
 	<head>
@@ -89,11 +70,15 @@ End Sub
 		<link rel="stylesheet" href="../styles/bootstrap.css" />
 	</head>
 	<body class="fixed-navbar fixed-sidebar">
-		<h1>Hello, World!</h1>
-		<img src="/img/hello.png" />
-		<div id="d1" style="color: blue;">
-			<div id="d2" disabled>Test</div>
-		</div>
+		<main>
+			<h1>Hello, World!
+			</h1>
+			<img src="/img/hello.png" />
+			<div id="d1" style="color: blue;">
+				<p>This is a paragraph</p>
+				<div id="d2" disabled>Test</div>
+			</div>
+		</main>
 	</body>
 </html>
 ```
