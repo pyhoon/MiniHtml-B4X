@@ -71,8 +71,7 @@ End Sub
 	</head>
 	<body class="fixed-navbar fixed-sidebar">
 		<main>
-			<h1>Hello, World!
-			</h1>
+			<h1>Hello, World!</h1>
 			<img src="/img/hello.png" />
 			<div id="d1" style="color: blue;">
 				<p>This is a paragraph</p>
