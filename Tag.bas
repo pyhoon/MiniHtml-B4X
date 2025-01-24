@@ -33,7 +33,7 @@ Public Sub Initialize (tagName As String) As Tag
 			mMode = mNormal
 		Case "meta"
 			mMode = mMeta
-		Case "title"
+		Case "title", "h1"
 			mMode = mUniline
 		Case "img", "link"
 			mMode = mLink
