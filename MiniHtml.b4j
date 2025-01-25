@@ -4,18 +4,21 @@ Group=Default Group
 Library1=b4xcollections
 Library2=jcore
 Module1=Body
-Module10=Tag
-Module2=Div
-Module3=Document
-Module4=H1
-Module5=Head
-Module6=Html
-Module7=Img
-Module8=Meta
-Module9=P
+Module10=Img
+Module11=Meta
+Module12=P
+Module13=Tag
+Module2=Button
+Module3=Div
+Module4=Document
+Module5=Form
+Module6=H1
+Module7=H5
+Module8=Head
+Module9=Html
 NumberOfFiles=0
 NumberOfLibraries=2
-NumberOfModules=10
+NumberOfModules=13
 Version=10
 @EndOfDesignText@
 'Non-UI application (console / server application)
@@ -23,7 +26,7 @@ Version=10
 	#CommandLineArgs:
 	#MergeLibraries: True
 	#LibraryName: MiniHtml
-	#LibraryVersion: 0.04
+	#LibraryVersion: 0.05
 	#LibraryAuthor: Aeric
 #End Region
 
@@ -34,7 +37,7 @@ End Sub
 Sub AppStart (Args() As String)
 	Dim doc As Document
 	doc.Initialize
-	doc.Append("#macro( header )")
+	'doc.Append("#macro( header )")
 	doc.AppendDocType
 	doc.Append(TAB)
 	doc.Append(GenerateHtml)
@@ -49,15 +52,19 @@ Sub GenerateHtml As String
 	html1.comment(" velocity.vm ")
 	Head.up(html1) _
 	.Meta_Preset _
-	.Raw("$csrf") _
 	.Title("$APP_TITLE") _
-	.Link(CreateMap("rel": "stylesheet", "href": "../styles/bootstrap.min.css"))
-	Dim body1 As Tag = Body.up(html1).attribute("class", "fixed-navbar fixed-sidebar")
-	Dim main1 As Tag = Html.create("main").up(body1)
-	H1.Text("Hello, World!").up(main1)
-	Img.src("/img/hello.png").up(main1)
-	Dim div1 As Tag = Div.up(main1).attribute("id", "d1").attribute("style", "color: blue;")
-	P.Text("This is a paragraph").Uniline.up(div1)
-	Div.up(div1).attribute("id", "d2").attribute("disabled", "").Uniline.Text("Test")
+	.Link(CreateMap("rel": "stylesheet", "href": "css/bootstrap.min.css"))
+	Dim body1 As Tag = Body.up(html1)'.attribute("class", "fixed-navbar fixed-sidebar")
+	Dim main1 As Tag = Html.create("main").up(body1).addClass("container").attribute("style", "margin-top:30px")
+	Html.create("script").attribute("src", "js/bootstrap.bundle.min.js").addTo(body1)
+	'H1.Text("Hello, World!").addClass("text-center").up(main1)
+	'Img.src("/img/hello.png").up(main1)
+	Dim div1 As Tag = Div.up(main1).attribute2(CreateMap("class": "card"))
+	Dim div2 As Tag = Div.up(div1).attribute("class", "card-body text-center p-3")
+	'P.Text("This is a paragraph").Uniline.up(div1)
+	Dim form1 As Tag = Form.action("#").up(div2)
+	Dim div3 As Tag = Div.attribute("class", "form-group").up(form1)
+	Html.create("input").addClass("form-control m-3").attribute2(CreateMap("type": "email", "required": "")).up(div3)
+	Html.create("button").attribute("type", "submit").Text("Submit").addClass("btn btn-primary").up(form1).uniline
 	Return html1.Build(-1)
 End Sub

@@ -30,3 +30,7 @@ End Sub
 Public Sub lang (value As String) As Tag
 	Return create(tagname).attribute("lang", value)
 End Sub
+
+'Public Sub script (value As String) As Tag
+'	Return create(tagname).attribute("src", value)
+'End Sub

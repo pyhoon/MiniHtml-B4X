@@ -30,9 +30,9 @@ Public Sub Initialize (tagName As String) As Tag
 	Select mName.ToLowerCase
 		Case "head"
 			mMode = mNormal
-		Case "meta"
+		Case "meta", "input"
 			mMode = mMeta
-		Case "title", "h1"
+		Case "title", "h1", "h2", "h3", "h4", "h5", "script"
 			mMode = mUniline
 		Case "img", "link"
 			mMode = mLink
@@ -176,6 +176,21 @@ Public Sub Text (value As String) As Tag
 	Return Me
 End Sub
 
+Public Sub Script (value As String) As Tag
+	innerTags.Add(Html.create("script").attribute("src", value))
+	Return Me
+End Sub
+
+Public Sub Script2 (value As String, keyvals As Map) As Tag
+	innerTags.Add(Html.create("script").attribute("src", value).attribute2(keyvals))
+	Return Me
+End Sub
+
+Public Sub Style (value As String) As Tag
+	innerTags.Add(Html.create("style").Text(value))
+	Return Me
+End Sub
+
 Public Sub newline
 	Raw("")
 End Sub
@@ -266,7 +281,7 @@ Public Sub addClass (name As String) As Tag
 		If mClasses.IndexOf(subname) < 0 Then mClasses.Add(subname)
 	Next
 	mClasses.Sort(True)
-	mAttributes.Put("class", mClasses)
+	mAttributes.Put("class", ClassesAsString)
 	Return Me
 End Sub
 

@@ -6,7 +6,7 @@ Version=10
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "head"
+	Private Const tagname As String = "form"
 End Sub
 
 Public Sub Init As Tag
@@ -25,10 +25,6 @@ Public Sub up (Parent As Tag) As Tag
 	Return Html.create(tagname).up(Parent)
 End Sub
 
-Public Sub script (value As String) As Tag
-	Return Html.create("script").attribute("src", value)
-End Sub
-
-Public Sub script2 (value As String, keyvals As Map) As Tag
-	Return Html.create("script").attribute("src", value).attribute2(keyvals)
+Public Sub action (value As String) As Tag
+	Return Html.create(tagname).attribute("action", value)
 End Sub
