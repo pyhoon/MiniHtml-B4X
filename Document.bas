@@ -25,13 +25,13 @@ End Sub
 
 Public Sub AddTab
 	If mFlat Then Return
-	For i = 0 To mTabs - 1
+	For n = 0 To mTabs - 1
 		mBuilder.Append(TAB)
 	Next
 End Sub
 
 Public Sub AddTabs (Value As Int)
-	For i = 0 To Value - 1
+	For n = 0 To Value - 1
 		mBuilder.Append(TAB)
 	Next
 End Sub

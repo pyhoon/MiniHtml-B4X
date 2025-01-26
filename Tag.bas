@@ -13,6 +13,8 @@ Sub Class_Globals
 	Private mAttributes As Map
 	Private mClasses As List
 	Private mStyles As Map
+	Private mParent As Tag
+	'Private mHasText As Boolean
 	Private mFlat As Boolean
 	Public Const mUniline 	As String = "uniline" 	' <tag></tag>
 	Public Const mNormal 	As String = "normal"	' <tag></tag> (multiline)
@@ -32,11 +34,11 @@ Public Sub Initialize (tagName As String) As Tag
 			mMode = mNormal
 		Case "meta", "input"
 			mMode = mMeta
-		Case "title", "h1", "h2", "h3", "h4", "h5", "script"
+		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "option", "b", "i", "u", "strong"
 			mMode = mUniline
-		Case "img", "link"
+		Case "img", "link", "br"
 			mMode = mLink
-		Case ""
+		Case "text", ""
 			mMode = mNoTag
 		Case Else
 			mMode = mNormal
@@ -44,12 +46,16 @@ Public Sub Initialize (tagName As String) As Tag
 	Return Me
 End Sub
 
-Public Sub Build (indent As Int) As String
+Public Sub build As String
+	Return build2(-1)
+End Sub
+
+Public Sub build2 (indent As Int) As String
 	Dim htmlText As StringBuilder
 	htmlText.Initialize
 	
 	htmlText.Append(CRLF)
-	For i = 0 To indent
+	For n = 0 To indent
 		htmlText.Append("	")
 	Next
 	
@@ -71,14 +77,15 @@ Public Sub Build (indent As Int) As String
 
 	Select mMode
 		Case mLink
-			htmlText.Append(" />")
+			'If mFlat = False Then htmlText.Append(" ")
+			htmlText.Append("/>")
 		Case mUniline, mNormal, mMeta
 			htmlText.Append(">")
 	End Select
 
 	For Each tagOrString In innerTags
 		If tagOrString Is Tag Then
-			htmlText.Append(tagOrString.As(Tag).Build(indent + 1))
+			htmlText.Append(tagOrString.As(Tag).build2(indent + 1))
 		Else
 			htmlText.Append(tagOrString.As(String))
 		End If
@@ -87,7 +94,7 @@ Public Sub Build (indent As Int) As String
 	Select mMode
 		Case mNormal
 			htmlText.Append(CRLF)
-			For i = 0 To indent
+			For n = 0 To indent
 				htmlText.Append("	")
 			Next
 			htmlText.Append("</" & mName & ">")
@@ -129,7 +136,7 @@ Public Sub PrintInnerTags
 End Sub
 
 Public Sub comment (value As String) As Tag
-	innerTags.Add(Html.create(""))
+	innerTags.Add(Html.create(mNoTag))
 	innerTags.Add($"<!--${value}-->"$)
 	'PrintInnerTags
 	Return Me
@@ -159,9 +166,14 @@ Public Sub Link (keyvals As Map) As Tag
 	Return Me
 End Sub
 
+Public Sub LinkCss (value As String) As Tag
+	innerTags.Add(Html.create("link").attribute2(CreateMap("rel": "stylesheet", "href": "css/bootstrap.min.css")))
+	Return Me
+End Sub
+
 ' raw with CRLF
 Public Sub Raw (value As String) As Tag
-	innerTags.Add(Html.create(""))
+	innerTags.Add(Html.create(mNoTag))
 	innerTags.Add(value)
 	Return Me
 End Sub
@@ -213,45 +225,61 @@ Public Sub Tags As List
 	Return innerTags
 End Sub
 
+Public Sub setParent (Parent As Tag)
+	mParent = Parent
+End Sub
+
+Public Sub getParent As Tag
+	Return mParent
+End Sub
+
 ' Add a Child and return parent tag
 Public Sub add (Child As Tag) As Tag
+	Child.Parent = Me
 	innerTags.Add(Child)
 	Return Me
 End Sub
 
 ' Add a Child without returning parent tag
 Public Sub add2 (Child As Tag)
+	Child.Parent = Me
 	innerTags.Add(Child)
 End Sub
 
 ' Add to Parent and return parent tag
 Public Sub addTo (Parent As Tag) As Tag
+	mParent = Parent
 	Parent.add(Me)
 	Return Me
 End Sub
 
 ' Add to Parent without returning parent tag
 Public Sub addTo2 (Parent As Tag)
+	mParent = Parent
 	Parent.add(Me)
 End Sub
 
 ' same as addTo
 Public Sub up (Parent As Tag) As Tag
+	mParent = Parent
 	Return addTo(Parent)
 End Sub
 
 ' same as addTo2
 Public Sub up2 (Parent As Tag)
+	mParent = Parent
 	addTo2(Parent)
 End Sub
 
 ' Same as add
 Public Sub down (Child As Tag) As Tag
+	Child.Parent = Me
 	Return add(Child)
 End Sub
 
 ' Same as add2
 Public Sub down2 (Child As Tag)
+	Child.Parent = Me
 	add2(Child)
 End Sub
 
@@ -270,9 +298,35 @@ Public Sub attribute2 (keyvals As Map) As Tag
 	Return Me
 End Sub
 
+' Add single attribute without value
+Public Sub attribute3 (name As String) As Tag
+	mAttributes.Put(name, "")
+	Return Me
+End Sub
+
+' Add attributes by passing a json object
+Public Sub attr (json As String) As Tag
+	Dim keyvals As Map = json.As(JSON).ToMap
+	For Each key As String In keyvals.Keys
+		Dim value As String = keyvals.Get(key)
+		mAttributes.Put(key, value)
+	Next
+	Return Me
+End Sub
+
 ' Return maps of attributes
 Public Sub getAttributes As Map
 	Return mAttributes
+End Sub
+
+Public Sub addId (value As String) As Tag
+	mAttributes.Put("id", value)
+	Return Me
+End Sub
+
+Public Sub addName (value As String) As Tag
+	mAttributes.Put("name", value)
+	Return Me
 End Sub
 
 Public Sub addClass (name As String) As Tag
@@ -281,46 +335,66 @@ Public Sub addClass (name As String) As Tag
 		If mClasses.IndexOf(subname) < 0 Then mClasses.Add(subname)
 	Next
 	mClasses.Sort(True)
-	mAttributes.Put("class", ClassesAsString)
+	updateClassAttribute
 	Return Me
 End Sub
 
 Public Sub removeClass (name As String) As Tag
 	If mClasses.IndexOf(name) > -1 Then mClasses.RemoveAt(mClasses.IndexOf(name))
-	If mClasses.Size = 0 Then
-		mAttributes.Remove("class")
-	Else
-		mAttributes.Put("class", mClasses)
-	End If
+	updateClassAttribute
 	Return Me
 End Sub
 
-Public Sub ListToString (list1 As List, separator As String) As String
+Public Sub addStyle (name As String) As Tag
+	Dim pairs() As String = Regex.Split(";", name)
+	For Each pair As String In pairs
+		Dim keyvals() As String = Regex.Split(":", pair)
+		mStyles.Put(keyvals(0), keyvals(1))
+	Next
+	updateStyleAttribute
+	Return Me
+End Sub
+
+Public Sub removeStyle (name As String) As Tag
+	If mStyles.ContainsKey(name) Then mStyles.Remove(name)
+	updateStyleAttribute
+	Return Me
+End Sub
+
+Private Sub updateClassAttribute
+	If mClasses.Size = 0 Then
+		mAttributes.Remove("class")
+	Else
+		mAttributes.Put("class", ClassesAsString)
+	End If
+End Sub
+
+Private Sub updateStyleAttribute
+	If mStyles.Size = 0 Then
+		mAttributes.Remove("style")
+	Else
+		mAttributes.Put("style", StylesAsString)
+	End If
+End Sub
+
+Public Sub ClassesAsString As String
 	Dim sb As StringBuilder
 	sb.Initialize
-	For Each item As String In list1
-		If sb.Length > 0 Then sb.Append(separator)
+	For Each item As String In mClasses
+		If sb.Length > 0 Then sb.Append(" ")
 		sb.Append(item)
 	Next
 	Return sb.ToString
 End Sub
 
-Public Sub ClassesAsString As String
-	Return ListToString(mClasses, " ")
-End Sub
-
-Public Sub MapToString (list1 As List, separator As String) As String
+Public Sub StylesAsString As String
 	Dim sb As StringBuilder
 	sb.Initialize
 	For Each key As String In mStyles.Keys
-		If sb.Length > 0 Then sb.Append(separator & IIf(mFlat, "", " "))
+		If sb.Length > 0 Then sb.Append(";" & IIf(mFlat, "", " "))
 		sb.Append($"${key}:${IIf(mFlat, "", " ")}${mStyles.Get(key)}"$)
 	Next
 	Return sb.ToString
-End Sub
-
-Public Sub StylesAsString As String
-	Return MapToString(mStyles, ";")
 End Sub
 
 Public Sub setMode (TagMode As String)
@@ -333,5 +407,12 @@ End Sub
 
 Public Sub uniline As Tag
 	mMode = mUniline
+	Return Me
+End Sub
+
+Public Sub required As Tag
+	If mName = "input" Then
+		mAttributes.Put("required", "")
+	End If
 	Return Me
 End Sub

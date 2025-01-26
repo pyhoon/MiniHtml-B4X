@@ -6,7 +6,7 @@ Version=10
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "div"
+	Private Const tagname As String = "input"
 End Sub
 
 Public Sub Init As Tag
@@ -25,14 +25,18 @@ Public Sub up (Parent As Tag) As Tag
 	Return Html.create(tagname).up(Parent)
 End Sub
 
-Public Sub Text (value As String) As Tag
+Public Sub text (value As String) As Tag
 	Return Html.create(tagname).Text(value)
 End Sub
 
-Public Sub addClass (name As String) As Tag
-	Return Html.create(tagname).attr($"{"class": ${name}}"$)
+Public Sub addType (value As String) As Tag
+	Return Html.create(tagname).attribute("type", value)
 End Sub
 
-Public Sub addStyle (name As String) As Tag
-	Return Html.create(tagname).attr($"{"style": ${name}}"$)
+Public Sub addId (value As String) As Tag
+	Return Html.create(tagname).attribute("id", value)
+End Sub
+
+Public Sub addName (value As String) As Tag
+	Return Html.create(tagname).attribute("name", value)
 End Sub
