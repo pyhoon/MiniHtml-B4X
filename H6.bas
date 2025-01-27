@@ -6,7 +6,7 @@ Version=10
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "strong"
+	Private Const tagname As String = "h6"
 End Sub
 
 Public Sub init As Tag
@@ -27,4 +27,12 @@ End Sub
 
 Public Sub Text (value As String) As Tag
 	Return init.Text(value)
+End Sub
+
+Public Sub addClass (name As String) As Tag
+	Return init.addClass(name)
+End Sub
+
+Public Sub addStyle (name As String) As Tag
+	Return init.addStyle(name)
 End Sub

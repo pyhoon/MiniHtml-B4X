@@ -14,13 +14,13 @@ Public Sub init As Tag
 End Sub
 
 Public Sub attribute (key As String, value As String) As Tag
-	Return Html.create(tagname).attribute(key, value)
+	Return init.attribute(key, value)
 End Sub
 
 Public Sub attribute2 (keyvals As Map) As Tag
-	Return Html.create(tagname).attribute2(keyvals)
+	Return init.attribute2(keyvals)
 End Sub
 
 Public Sub up (Parent As Tag) As Tag
-	Return Html.create(tagname).up(Parent)
+	Return init.up(Parent)
 End Sub
