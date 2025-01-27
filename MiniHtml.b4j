@@ -3,46 +3,47 @@ Build1=Default,b4j.example
 Group=Default Group
 Library1=jcore
 Library2=json
-Module1=A
-Module10=H2
-Module11=H3
-Module12=H4
-Module13=H5
-Module14=Head
-Module15=Html
-Module16=I
-Module17=Img
+Module1=Anchor
+Module10=H1
+Module11=H2
+Module12=H3
+Module13=H4
+Module14=H5
+Module15=Head
+Module16=Html
+Module17=IMG
 Module18=Input
-Module19=Label
-Module2=B
-Module20=Li
-Module21=Meta
-Module22=Ol
-Module23=Option
-Module24=P
-Module25=Select
-Module26=Span
-Module27=Strong
-Module28=table
-Module29=Tag
-Module3=Body
-Module30=tbody
-Module31=td
-Module32=Textarea
-Module33=th
-Module34=thead
-Module35=tr
-Module36=U
-Module37=Ul
-Module4=Br
+Module19=Italic
+Module2=Body
+Module20=Label
+Module21=LI
+Module22=Meta
+Module23=OL
+Module24=Option
+Module25=Paragraph
+Module26=Select
+Module27=Span
+Module28=Strong
+Module29=Table
+Module3=Bold
+Module30=Tag
+Module31=Tbody
+Module32=TD
+Module33=Textarea
+Module34=TH
+Module35=Thead
+Module36=TR
+Module37=UL
+Module38=Underline
+Module4=BR
 Module5=Button
-Module6=Div
+Module6=DIV
 Module7=Document
-Module8=Form
-Module9=H1
+Module8=EM
+Module9=Form
 NumberOfFiles=0
 NumberOfLibraries=2
-NumberOfModules=37
+NumberOfModules=38
 Version=10
 @EndOfDesignText@
 'Non-UI application (console / server application)
@@ -87,10 +88,10 @@ Sub GenerateHtml As String
 	Input.addType("email").addId("email").addClass("form-control").required.up(div3)
 	Dim div4 As Tag = Div.addClass("text-center").up(form1)
 	Button.addType("submit").text("Submit").addClass("btn btn-primary mt-3 text-center").up(div4)
-	P.up(main1) _
+	Paragraph.up(main1) _
 	.Text("This is a ") _
 	.add(Span.Text("red text").addClass("text-danger")) _
 	.Text(" in a ") _
-	.add(B.text("paragraph"))
+	.add(Bold.text("paragraph"))
 	Return html1.build
 End Sub
