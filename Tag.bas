@@ -450,6 +450,31 @@ Public Sub hxGet (url As String) As Tag
 	Return Me
 End Sub
 
+Public Sub hxPost (url As String) As Tag
+	mAttributes.Put("hx-post", url)
+	Return Me
+End Sub
+
+Public Sub hxPut (url As String) As Tag
+	mAttributes.Put("hx-put", url)
+	Return Me
+End Sub
+
+Public Sub hxPatch (url As String) As Tag
+	mAttributes.Put("hx-patch", url)
+	Return Me
+End Sub
+
+Public Sub hxDelete (url As String) As Tag
+	mAttributes.Put("hx-delete", url)
+	Return Me
+End Sub
+
+Public Sub hxSwap (name As String) As Tag
+	mAttributes.Put("hx-swap", name)
+	Return Me
+End Sub
+
 Public Sub hxTarget (name As String) As Tag
 	mAttributes.Put("hx-target", name)
 	Return Me
@@ -457,5 +482,50 @@ End Sub
 
 Public Sub hxTrigger (eventname As String) As Tag
 	mAttributes.Put("hx-trigger", eventname)
+	Return Me
+End Sub
+
+Public Sub hxIndicator (name As String) As Tag
+	mAttributes.Put("hx-indicator", name)
+	Return Me
+End Sub
+
+Public Sub hxConfirm (value As String) As Tag
+	mAttributes.Put("hx-confirm", value)
+	Return Me
+End Sub
+
+Public Sub hxDisable As Tag
+	mAttributes.Put("hx-disable", "")
+	Return Me
+End Sub
+
+Public Sub hxHistory (value As String) As Tag
+	mAttributes.Put("hx-history", value)
+	Return Me
+End Sub
+
+Public Sub hxBoost (value As String) As Tag
+	mAttributes.Put("hx-boost", value)
+	Return Me
+End Sub
+
+Public Sub hxPushUrl (value As String) As Tag
+	mAttributes.Put("hx-push-url", value)
+	Return Me
+End Sub
+
+Public Sub hxExt (name As String) As Tag
+	mAttributes.Put("hx-ext", name)
+	Return Me
+End Sub
+
+Public Sub hxSync (name As String) As Tag
+	mAttributes.Put("hx-sync", name)
+	Return Me
+End Sub
+
+Public Sub hxSwapOob (value As String) As Tag
+	mAttributes.Put("hx-swap-oob", value)
 	Return Me
 End Sub
