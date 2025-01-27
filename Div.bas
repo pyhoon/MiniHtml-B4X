@@ -30,9 +30,9 @@ Public Sub Text (value As String) As Tag
 End Sub
 
 Public Sub addClass (name As String) As Tag
-	Return Html.create(tagname).attr($"{"class": ${name}}"$)
+	Return Html.create(tagname).addClass(name)
 End Sub
 
 Public Sub addStyle (name As String) As Tag
-	Return Html.create(tagname).attr($"{"style": ${name}}"$)
+	Return Html.create(tagname).addStyle(name)
 End Sub

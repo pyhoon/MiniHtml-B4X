@@ -25,6 +25,6 @@ Public Sub up (Parent As Tag) As Tag
 	Return Html.create(tagname).up(Parent)
 End Sub
 
-Public Sub text (value As String) As Tag
+Public Sub Text (value As String) As Tag
 	Return Html.create(tagname).Text(value)
 End Sub

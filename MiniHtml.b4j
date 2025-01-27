@@ -86,5 +86,10 @@ Sub GenerateHtml As String
 	Input.addType("email").addId("email").addClass("form-control").required.up(div3)
 	Dim div4 As Tag = Div.addClass("text-center").up(form1)
 	Button.addType("submit").text("Submit").addClass("btn btn-primary mt-3 text-center").up(div4)
+	P.up(main1) _
+	.Text("This is a ") _
+	.add(Span.Text("red text").addClass("text-danger")) _
+	.Text(" in a ") _
+	.add(B.text("paragraph"))
 	Return html1.build
 End Sub
