@@ -1,3 +1,5 @@
 Author=Aeric
 Version=0.06
-Supported Platforms=B4A,B4i,B4J
+B4J.DependsOn=Json
+B4i.DependsOn=iJSON
+B4A.DependsOn=JSON
