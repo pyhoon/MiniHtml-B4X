@@ -188,13 +188,13 @@ Public Sub cdnStyle2 (href As String, integrity As String, crossorigin As String
 End Sub
 
 ' raw with CRLF
-Public Sub Raw (value As String) As Tag
+Public Sub TextNextLine (value As String) As Tag
 	innerTags.Add(Html.create(mNoTag))
 	innerTags.Add(value)
 	Return Me
 End Sub
 
-Public Sub Raw2 (value As String)
+Public Sub TextInline (value As String)
 	innerTags.Add(value)
 End Sub
 
@@ -220,7 +220,7 @@ Public Sub style (value As String) As Tag
 End Sub
 
 Public Sub newline
-	Raw("")
+	TextNextLine("")
 End Sub
 
 Public Sub title (value As String) As Tag
