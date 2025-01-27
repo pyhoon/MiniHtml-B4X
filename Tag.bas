@@ -304,11 +304,15 @@ End Sub
 
 ' Add attributes by passing a json object
 Public Sub attr (json As String) As Tag
-	Dim keyvals As Map = json.As(JSON).ToMap
-	For Each key As String In keyvals.Keys
-		Dim value As String = keyvals.Get(key)
-		mAttributes.Put(key, value)
-	Next
+	Try
+		Dim keyvals As Map = json.As(JSON).ToMap
+		For Each key As String In keyvals.Keys
+			Dim value As String = keyvals.Get(key)
+			mAttributes.Put(key, value)
+		Next
+	Catch
+		Log(LastException)
+	End Try
 	Return Me
 End Sub
 
@@ -328,12 +332,16 @@ Public Sub addName (value As String) As Tag
 End Sub
 
 Public Sub addClass (name As String) As Tag
-	Dim names() As String = Regex.Split(" ", name)
-	For Each subname As String In names
-		If mClasses.IndexOf(subname) < 0 Then mClasses.Add(subname)
-	Next
-	mClasses.Sort(True)
-	updateClassAttribute
+	Try
+		Dim names() As String = Regex.Split(" ", name)
+		For Each subname As String In names
+			If mClasses.IndexOf(subname) < 0 Then mClasses.Add(subname)
+		Next
+		mClasses.Sort(True)
+		updateClassAttribute
+	Catch
+		Log(LastException)
+	End Try
 	Return Me
 End Sub
 
@@ -344,12 +352,16 @@ Public Sub removeClass (name As String) As Tag
 End Sub
 
 Public Sub addStyle (name As String) As Tag
-	Dim pairs() As String = Regex.Split(";", name)
-	For Each pair As String In pairs
-		Dim keyvals() As String = Regex.Split(":", pair)
-		mStyles.Put(keyvals(0), keyvals(1))
-	Next
-	updateStyleAttribute
+	Try
+		Dim pairs() As String = Regex.Split(";", name)
+		For Each pair As String In pairs
+			Dim keyvals() As String = Regex.Split(":", pair)
+			mStyles.Put(keyvals(0), keyvals(1))
+		Next
+		updateStyleAttribute
+	Catch
+		Log(LastException)
+	End Try
 	Return Me
 End Sub
 
