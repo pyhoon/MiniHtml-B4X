@@ -78,6 +78,7 @@ Sub GenerateHtml As String
 	.script("js/bootstrap.bundle.min.js")
 	Dim body1 As Tag = Body.up(html1)
 	Dim main1 As Tag = Html.create("main").up(body1).addClass("container").addStyle("margin-top: 30px")
+	H1.Text("Hello, World!").up(main1)
 	Dim div1 As Tag = Div.up(main1).addClass("card")
 	Dim div2 As Tag = Div.up(div1).addClass("card-body")
 	Dim form1 As Tag = Form.action("#").up(div2)
