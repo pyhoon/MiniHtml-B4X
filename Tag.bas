@@ -164,8 +164,26 @@ Public Sub link (keyvals As Map) As Tag
 	Return Me
 End Sub
 
-Public Sub linkCss (value As String) As Tag
-	innerTags.Add(Html.create("link").attribute2(CreateMap("rel": "stylesheet", "href": "css/bootstrap.min.css")))
+Public Sub linkCss (href As String) As Tag
+	innerTags.Add(Html.create("link").attribute2(CreateMap("href": href, "rel": "stylesheet")))
+	Return Me
+End Sub
+
+Public Sub cdnScript (src As String, integrity As String) As Tag
+	Return cdnScript2(src, integrity, "anonymous")
+End Sub
+
+Public Sub cdnScript2 (src As String, integrity As String, crossorigin As String) As Tag
+	innerTags.Add(Html.create("script").attribute2(CreateMap("src": src, "integrity": integrity, "crossorigin": crossorigin)))
+	Return Me
+End Sub
+
+Public Sub cdnStyle (href As String, integrity As String) As Tag
+	Return cdnStyle2(href, integrity, "anonymous")
+End Sub
+
+Public Sub cdnStyle2 (href As String, integrity As String, crossorigin As String) As Tag
+	innerTags.Add(Html.create("link").attribute2(CreateMap("href": href, "rel": "stylesheet", "integrity": integrity, "crossorigin": crossorigin)))
 	Return Me
 End Sub
 
@@ -355,8 +373,8 @@ Public Sub addStyle (name As String) As Tag
 	Try
 		Dim pairs() As String = Regex.Split(";", name)
 		For Each pair As String In pairs
-			Dim keyvals() As String = Regex.Split(":", pair)
-			mStyles.Put(keyvals(0), keyvals(1))
+			Dim keyvals() As String = Regex.Split(":", pair.Trim)
+			mStyles.Put(keyvals(0).Trim, keyvals(1).Trim)
 		Next
 		updateStyleAttribute
 	Catch
@@ -424,5 +442,20 @@ Public Sub required As Tag
 	If mName = "input" Then
 		mAttributes.Put("required", "")
 	End If
+	Return Me
+End Sub
+
+Public Sub hxGet (url As String) As Tag
+	mAttributes.Put("hx-get", url)
+	Return Me
+End Sub
+
+Public Sub hxTarget (name As String) As Tag
+	mAttributes.Put("hx-target", name)
+	Return Me
+End Sub
+
+Public Sub hxTrigger (eventname As String) As Tag
+	mAttributes.Put("hx-trigger", eventname)
 	Return Me
 End Sub

@@ -29,6 +29,10 @@ Public Sub Text (value As String) As Tag
 	Return init.Text(value)
 End Sub
 
+Public Sub addId (value As String) As Tag
+	Return init.addId(value)
+End Sub
+
 Public Sub addClass (name As String) As Tag
 	Return init.addClass(name)
 End Sub
