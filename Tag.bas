@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=Default Group
+Group=Classes
 ModulesStructureVersion=1
 Type=Class
 Version=4.5
@@ -14,7 +14,6 @@ Sub Class_Globals
 	Private mClasses As List
 	Private mStyles As Map
 	Private mParent As Tag
-	'Private mHasText As Boolean
 	Private mFlat As Boolean
 	Public Const mUniline 	As String = "uniline" 	' <tag></tag>
 	Public Const mNormal 	As String = "normal"	' <tag></tag> (multiline)
@@ -34,7 +33,7 @@ Public Sub Initialize (tagName As String) As Tag
 			mMode = mNormal
 		Case "meta", "input"
 			mMode = mMeta
-		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "option", "b", "i", "u", "strong"
+		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td"
 			mMode = mUniline
 		Case "img", "link", "br"
 			mMode = mLink
@@ -138,7 +137,6 @@ End Sub
 Public Sub comment (value As String) As Tag
 	innerTags.Add(Html.create(mNoTag))
 	innerTags.Add($"<!--${value}-->"$)
-	'PrintInnerTags
 	Return Me
 End Sub
 Public Sub comment2 (value As String) As Tag
@@ -154,19 +152,19 @@ Public Sub addMeta2 (keyvals As Map)
 	innerTags.Add(Html.create("meta").attribute2(keyvals))
 End Sub
 
-Public Sub Meta_Preset As Tag
+Public Sub meta_preset As Tag
 	addMeta("charset", "UTF-8")
 	addMeta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1.0"))
 	addMeta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
 	Return Me
 End Sub
 
-Public Sub Link (keyvals As Map) As Tag
+Public Sub link (keyvals As Map) As Tag
 	innerTags.Add(Html.create("link").attribute2(keyvals))
 	Return Me
 End Sub
 
-Public Sub LinkCss (value As String) As Tag
+Public Sub linkCss (value As String) As Tag
 	innerTags.Add(Html.create("link").attribute2(CreateMap("rel": "stylesheet", "href": "css/bootstrap.min.css")))
 	Return Me
 End Sub
@@ -188,17 +186,17 @@ Public Sub Text (value As String) As Tag
 	Return Me
 End Sub
 
-Public Sub Script (value As String) As Tag
+Public Sub script (value As String) As Tag
 	innerTags.Add(Html.create("script").attribute("src", value))
 	Return Me
 End Sub
 
-Public Sub Script2 (value As String, keyvals As Map) As Tag
+Public Sub script2 (value As String, keyvals As Map) As Tag
 	innerTags.Add(Html.create("script").attribute("src", value).attribute2(keyvals))
 	Return Me
 End Sub
 
-Public Sub Style (value As String) As Tag
+Public Sub style (value As String) As Tag
 	innerTags.Add(Html.create("style").Text(value))
 	Return Me
 End Sub
@@ -207,7 +205,7 @@ Public Sub newline
 	Raw("")
 End Sub
 
-Public Sub Title (value As String) As Tag
+Public Sub title (value As String) As Tag
 	innerTags.Add(Html.create("title").Text(value))
 	Return Me
 End Sub

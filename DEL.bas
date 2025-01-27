@@ -6,7 +6,7 @@ Version=10
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "a"
+	Private Const tagname As String = "del"
 End Sub
 
 Public Sub init As Tag
@@ -27,8 +27,4 @@ End Sub
 
 Public Sub Text (value As String) As Tag
 	Return Html.create(tagname).Text(value)
-End Sub
-
-Public Sub href (value As String) As Tag
-	Return Html.create(tagname).attribute("href", value)
 End Sub

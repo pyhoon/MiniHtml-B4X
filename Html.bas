@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=Default Group
+Group=Modules
 ModulesStructureVersion=1
 Type=StaticCode
 Version=10
@@ -13,6 +13,12 @@ Public Sub init As Tag
 	Return create(tagname)
 End Sub
 
+Public Sub create (name As String) As Tag
+	Dim tag1 As Tag
+	tag1.Initialize(name)
+	Return tag1
+End Sub
+
 Public Sub attribute (key As String, value As String) As Tag
 	Return create(tagname).attribute(key, value)
 End Sub
@@ -21,16 +27,6 @@ Public Sub attribute2 (keyvals As Map) As Tag
 	Return create(tagname).attribute2(keyvals)
 End Sub
 
-Public Sub create (name As String) As Tag
-	Dim tag1 As Tag
-	tag1.Initialize(name)
-	Return tag1
-End Sub
-
 Public Sub lang (value As String) As Tag
 	Return create(tagname).attribute("lang", value)
 End Sub
-
-'Public Sub script (value As String) As Tag
-'	Return create(tagname).attribute("src", value)
-'End Sub

@@ -1,5 +1,5 @@
 ﻿B4J=true
-Group=Default Group
+Group=Modules
 ModulesStructureVersion=1
 Type=StaticCode
 Version=10
