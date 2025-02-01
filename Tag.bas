@@ -33,7 +33,7 @@ Public Sub Initialize (tagName As String) As Tag
 			mMode = mNormal
 		Case "meta", "input"
 			mMode = mMeta
-		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td"
+		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td", "small"
 			mMode = mUniline
 		Case "img", "link", "br"
 			mMode = mLink
@@ -83,6 +83,7 @@ Public Sub build2 (indent As Int) As String
 	End Select
 
 	For Each tagOrString In innerTags
+		'Log(tagOrString)
 		If tagOrString Is Tag Then
 			htmlText.Append(tagOrString.As(Tag).build2(indent + 1))
 		Else
@@ -122,15 +123,18 @@ Public Sub innerTag (index As Int) As Tag
 End Sub
 
 Public Sub PrintInnerTags
-	For Each item In innerTags
+	For Each item As Tag In innerTags
 		'Log(GetType(item))
-		If item Is Tag Then
-			Log(item.As(Tag).IsInitialized & "[" & item.As(Tag).Name & "]")
-		Else If item Is String Then
-			Log(item)
-		Else
-			Log(GetType(item))	
-		End If
+		'If item Is Tag Then
+			If item.IsInitialized Then
+				Log(item.Name)
+			End If
+			item.PrintInnerTags
+		'Else If item Is String Then
+		'	Log(item)
+		'Else
+		'	Log(GetType(item))	
+		'End If
 	Next
 End Sub
 
@@ -251,51 +255,47 @@ End Sub
 
 ' Add a Child and return parent tag
 Public Sub add (Child As Tag) As Tag
-	Child.Parent = Me
 	innerTags.Add(Child)
+	'Child.Parent = Me.As(Tag)
 	Return Me
 End Sub
 
 ' Add a Child without returning parent tag
 Public Sub add2 (Child As Tag)
-	Child.Parent = Me
 	innerTags.Add(Child)
+	'Child.Parent = Me.As(Tag)
 End Sub
 
 ' Add to Parent and return parent tag
 Public Sub addTo (Parent As Tag) As Tag
-	mParent = Parent
 	Parent.add(Me)
+	mParent = Parent
 	Return Me
 End Sub
 
 ' Add to Parent without returning parent tag
 Public Sub addTo2 (Parent As Tag)
-	mParent = Parent
 	Parent.add(Me)
+	mParent = Parent
 End Sub
 
 ' same as addTo
 Public Sub up (Parent As Tag) As Tag
-	mParent = Parent
 	Return addTo(Parent)
 End Sub
 
 ' same as addTo2
 Public Sub up2 (Parent As Tag)
-	mParent = Parent
 	addTo2(Parent)
 End Sub
 
 ' Same as add
 Public Sub down (Child As Tag) As Tag
-	Child.Parent = Me
 	Return add(Child)
 End Sub
 
 ' Same as add2
 Public Sub down2 (Child As Tag)
-	Child.Parent = Me
 	add2(Child)
 End Sub
 
@@ -355,7 +355,7 @@ Public Sub addClass (name As String) As Tag
 		For Each subname As String In names
 			If mClasses.IndexOf(subname) < 0 Then mClasses.Add(subname)
 		Next
-		mClasses.Sort(True)
+		'mClasses.Sort(True)
 		updateClassAttribute
 	Catch
 		Log(LastException)
