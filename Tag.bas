@@ -124,17 +124,10 @@ End Sub
 
 Public Sub PrintInnerTags
 	For Each item As Tag In innerTags
-		'Log(GetType(item))
-		'If item Is Tag Then
-			If item.IsInitialized Then
-				Log(item.Name)
-			End If
-			item.PrintInnerTags
-		'Else If item Is String Then
-		'	Log(item)
-		'Else
-		'	Log(GetType(item))	
-		'End If
+		If item.IsInitialized Then
+			Log(item.Name)
+		End If
+		item.PrintInnerTags
 	Next
 End Sub
 
@@ -203,7 +196,6 @@ Public Sub TextInline (value As String)
 End Sub
 
 Public Sub Text (value As String) As Tag
-	'innerTags.Add(Html.create("").Text(value))
 	innerTags.Add(value)
 	Return Me
 End Sub
@@ -256,14 +248,12 @@ End Sub
 ' Add a Child and return parent tag
 Public Sub add (Child As Tag) As Tag
 	innerTags.Add(Child)
-	'Child.Parent = Me.As(Tag)
 	Return Me
 End Sub
 
 ' Add a Child without returning parent tag
 Public Sub add2 (Child As Tag)
 	innerTags.Add(Child)
-	'Child.Parent = Me.As(Tag)
 End Sub
 
 ' Add to Parent and return parent tag

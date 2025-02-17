@@ -3,7 +3,7 @@ Build1=Default,b4j.example
 Group=App
 Library1=jcore
 Library2=json
-Library3=b4xcollections
+Library3=minihtmlparser
 Module1=Anchor
 Module10=Form
 Module11=H1
@@ -21,26 +21,25 @@ Module21=Italic
 Module22=Label
 Module23=LI
 Module24=Meta
-Module25=MiniHtmlParser
-Module26=OL
-Module27=Option
-Module28=Paragraph
-Module29=Plain
+Module25=OL
+Module26=Option
+Module27=Paragraph
+Module28=Plain
+Module29=Select
 Module3=Bold
-Module30=Select
-Module31=Span
-Module32=Strong
-Module33=Table
-Module34=Tag
-Module35=Tbody
-Module36=TD
-Module37=Textarea
-Module38=TH
-Module39=Thead
+Module30=Span
+Module31=Strong
+Module32=Table
+Module33=Tag
+Module34=Tbody
+Module35=TD
+Module36=Textarea
+Module37=TH
+Module38=Thead
+Module39=TR
 Module4=BR
-Module40=TR
-Module41=UL
-Module42=Underline
+Module40=UL
+Module41=Underline
 Module5=Button
 Module6=DEL
 Module7=DIV
@@ -48,7 +47,7 @@ Module8=Document
 Module9=EM
 NumberOfFiles=0
 NumberOfLibraries=3
-NumberOfModules=42
+NumberOfModules=41
 Version=10
 @EndOfDesignText@
 'Non-UI application (console / server application)
@@ -56,29 +55,23 @@ Version=10
 	#CommandLineArgs:
 	#MergeLibraries: True
 	#LibraryName: MiniHtml
-	#LibraryVersion: 0.07
+	#LibraryVersion: 0.08
 	#LibraryAuthor: Aeric
 #End Region
 
 Sub Process_Globals
 	Private HtmlParser As MiniHtmlParser
-	
 End Sub
 
 Sub AppStart (Args() As String)
 	HtmlParser.Initialize
-	
 	Dim doc As Document
 	doc.Initialize
 	doc.AppendDocType
-	'doc.Append(TAB)
 	doc.Append(GenerateHtml)
 	Dim content As String = doc.ToString
 	LogColor(content, -16776961)
 	File.WriteString(File.DirApp, "index.html", content)
-
-	'Dim tag1 As Tag = ConvertRawTextToTag(loginForm)
-	'LogColor(tag1.PrintInnerTags, -16776961)
 	StartMessageLoop
 End Sub
 
@@ -90,21 +83,6 @@ Sub GenerateHtml As String
 	.script("js/bootstrap.bundle.min.js")
 	Dim body1 As Tag = Body.up(html1)
 	Dim main1 As Tag = Html.create("main").up(body1).addClass("container").addStyle("margin-top: 30px")
-'	H1.Text("Hello, World!").up(main1)
-'	Dim div1 As Tag = DIV.up(main1).addClass("card")
-'	Dim div2 As Tag = DIV.up(div1).addClass("card-body")
-'	Dim form1 As Tag = Form.action("#").up(div2)
-'	Dim div3 As Tag = DIV.up(form1).addClass("form-group")
-'	Label.forId("email").Text("Email").up(div3)
-'	Input.addType("email").addId("email").addClass("form-control").required.up(div3)
-'	Dim div4 As Tag = DIV.addClass("text-center").up(form1)
-'	Button.addType("submit").Text("Submit").addClass("btn btn-primary mt-3 text-center").up(div4)
-'	Paragraph.up(main1) _
-'	.Text("This is a ") _
-'	.add(Span.Text("red text").addClass("text-danger")) _
-'	.Text(" in a ") _
-'	.add(Bold.Text("paragraph"))
-	
 	main1.comment(" Example: https://getbootstrap.com/docs/5.3/examples/heroes/ ")
 	Dim div1 As Tag = DIV.up(main1).addClass("container")
 	Dim div2 As Tag = DIV.up(div1).addClass("row align-items-center py-5")
@@ -149,7 +127,6 @@ Sub ConvertTagNodeToTag (node1 As HtmlNode) As Tag
 	If style1 <> "" Then parent.addStyle(style1)
 	
 	For Each att As HtmlAttribute In node1.Attributes
-		'Log(att)
 		If att.Key <> "class" And att.Key <> "style" Then
 			If att.Key = "value" And att.Value <> "" Then
 				parent.Text(att.Value)
@@ -164,58 +141,3 @@ Sub ConvertTagNodeToTag (node1 As HtmlNode) As Tag
 	Next
 	Return parent
 End Sub
-
-'Sub GetChildTags (node1 As HtmlNode) As Tag
-'	For Each child As HtmlNode In node1.Children
-'		Log(child.Name)
-'		Dim tag1 As Tag
-'		tag1.Initialize(child.Name)
-'		If child.Name = "text" Then
-'			Dim index As Int = child.Attributes.IndexOf("value")
-'			If index > -1 Then
-'				Dim value As String = child.Attributes.Get(index)
-'				If value.Trim.Length > 0 Then
-'					tag1.Text(value)
-'				End If
-'			End If
-'		Else
-'			Dim Attributes As Map
-'			Attributes.Initialize
-'			For Each attr As HtmlAttribute In child.Attributes
-'				Log("  " & attr.Key & " = " & attr.Value)
-'				Attributes.Put(attr.Key, attr.Value)
-'			Next
-'			tag1.attribute2(Attributes)
-'		End If			
-'		If child.Children.Size > 0 Then
-'			For Each grandchild As HtmlNode In child.Children
-'				Log(grandchild.Name)
-'				Dim tag2 As Tag
-'				tag2.Initialize(grandchild.Name)
-'				If grandchild.Name = "text" Then
-'					Dim index As Int = grandchild.Attributes.IndexOf("value")
-'					If index > -1 Then
-'						Dim value As String = grandchild.Attributes.Get(index)
-'						If value.Trim.Length > 0 Then
-'							Log("  " & value)
-'							tag2.Text(value)
-'						End If
-'					End If
-'				Else
-'					For Each attr As HtmlAttribute In grandchild.Attributes
-'						Log("  " & attr.Key & " = " & attr.Value)
-'						Attributes.Put(attr.Key, attr.Value)
-'					Next
-'				End If
-'				tag2.attribute2(Attributes)
-'				If grandchild.Children.Size > 0 Then
-'					For Each grandgrandchild As HtmlNode In grandchild.Children
-'						tag2.add(GetChildTags(grandgrandchild))
-'					Next
-'				End If
-'			Next
-'			tag1.add(tag2)
-'		End If
-'	Next
-'	Return tag1
-'End Sub
