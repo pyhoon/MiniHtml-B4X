@@ -83,7 +83,6 @@ Public Sub build2 (indent As Int) As String
 	End Select
 
 	For Each tagOrString In innerTags
-		'Log(tagOrString)
 		If tagOrString Is Tag Then
 			htmlText.Append(tagOrString.As(Tag).build2(indent + 1))
 		Else
