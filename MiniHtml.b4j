@@ -16,30 +16,29 @@ Module17=Head
 Module18=Html
 Module19=IMG
 Module2=Body
-Module20=Input
-Module21=Italic
-Module22=Label
-Module23=LI
-Module24=Meta
-Module25=OL
-Module26=Option
-Module27=Paragraph
-Module28=Plain
-Module29=Select
+Module20=Italic
+Module21=Label
+Module22=LI
+Module23=Meta
+Module24=OL
+Module25=Option
+Module26=Paragraph
+Module27=Plain
+Module28=Select
+Module29=Span
 Module3=Bold
-Module30=Span
-Module31=Strong
-Module32=Table
-Module33=Tag
-Module34=Tbody
-Module35=TD
-Module36=Textarea
-Module37=TH
-Module38=Thead
-Module39=TR
+Module30=Strong
+Module31=Table
+Module32=Tag
+Module33=Tbody
+Module34=TD
+Module35=Textarea
+Module36=TH
+Module37=Thead
+Module38=TR
+Module39=UL
 Module4=BR
-Module40=UL
-Module41=Underline
+Module40=Underline
 Module5=Button
 Module6=DEL
 Module7=DIV
@@ -47,7 +46,7 @@ Module8=Document
 Module9=EM
 NumberOfFiles=0
 NumberOfLibraries=3
-NumberOfModules=41
+NumberOfModules=40
 Version=10
 @EndOfDesignText@
 'Non-UI application (console / server application)
@@ -129,7 +128,11 @@ Sub ConvertTagNodeToTag (node1 As HtmlNode) As Tag
 	For Each att As HtmlAttribute In node1.Attributes
 		If att.Key <> "class" And att.Key <> "style" Then
 			If att.Key = "value" And att.Value <> "" Then
-				parent.Text(att.Value)
+				If node1.Name = "input" Then 
+					parent.attribute(att.Key, att.Value)
+				Else
+					parent.Text(att.Value)
+				End If
 			Else
 				parent.attribute(att.Key, att.Value)
 			End If
