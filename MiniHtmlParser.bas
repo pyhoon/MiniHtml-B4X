@@ -197,7 +197,9 @@ Private Sub ParseAttributes (Parent As HtmlNode)
 	ReadUntil(">")
 	Dim s As String = mHtml.SubString2(start, Index - 1)
 	For Each EscapeChar As String In Array("'", $"""$)
-		Dim m As Matcher = Regex.Matcher($"(\w+)\s*=\s*\${EscapeChar}([^${EscapeChar}]+)\${EscapeChar}"$, s)
+		'allow attribute names contain dashes (-), e.g data-value or aria-label
+		'Dim m As Matcher = Regex.Matcher($"(\w+)\s*=\s*\${EscapeChar}([^${EscapeChar}]+)\${EscapeChar}"$, s)
+		Dim m As Matcher = Regex.Matcher($"([a-zA-Z0-9-]+)\s*=\s*\${EscapeChar}([^${EscapeChar}]+)\${EscapeChar}"$, s)
 		Do While m.Find
 			Parent.Attributes.Add(CreateHtmlAttribute(m.Group(1), m.Group(2)))
 		Loop

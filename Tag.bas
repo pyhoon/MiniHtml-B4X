@@ -55,7 +55,7 @@ Public Sub build2 (indent As Int) As String
 	
 	htmlText.Append(CRLF)
 	For n = 0 To indent
-		htmlText.Append("	")
+		htmlText.Append(TAB)
 	Next
 	
 	If Not(mMode = "") Then
@@ -158,8 +158,8 @@ End Sub
 
 Public Sub meta_preset As Tag
 	addMeta("charset", "UTF-8")
-	addMeta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1.0"))
-	addMeta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
+	addMeta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1"))
+	'addMeta2(CreateMap("http-equiv": "X-UA-Compatible", "content": "IE=edge"))
 	Return Me
 End Sub
 
@@ -435,6 +435,11 @@ End Sub
 
 Public Sub uniline As Tag
 	mMode = mUniline
+	Return Me
+End Sub
+
+Public Sub multiline As Tag
+	mMode = mNormal
 	Return Me
 End Sub
 

@@ -51,10 +51,15 @@ Public Sub Append (mText As String)
 	If Not(mFlat) Then mBuilder.Append(CRLF)
 End Sub
 
+Public Sub Append2 (mText As String)
+	mBuilder.Append(mText)
+	'If Not(mFlat) Then mBuilder.Append(CRLF)
+End Sub
+
 ' returns <code><!DOCTYPE html></code>
 Public Sub AppendDocType
 	mBuilder.Append($"<!DOCTYPE html>"$)
-	If Not(mFlat) Then mBuilder.Append(CRLF)
+	'If Not(mFlat) Then mBuilder.Append(CRLF)
 End Sub
 
 Public Sub ToString As String
