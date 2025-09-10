@@ -225,13 +225,13 @@ Public Sub CreateHtmlAttribute (Key As String, Value As String) As HtmlAttribute
 End Sub
 
 Public Sub PrintNode (node As HtmlNode)
-	PrintNodeHelper(node, "")
+	PrintNodeHelper(node, "  ")
 End Sub
 
 Private Sub PrintNodeHelper (node As HtmlNode, Indent As String)
-	Log($"${Indent}*** ${node.Name} ***"$)
+	LogColor($"${Indent}*** ${node.Name} ***"$, Main.COLOR_POST)
 	For Each attribute As HtmlAttribute In node.Attributes
-		Log($"${Indent}|${attribute.Key}: ${attribute.Value}|"$)
+		Log($"${Indent}${attribute.Key}: "${attribute.Value}""$)
 	Next
 	For Each child As HtmlNode In node.Children
 		PrintNodeHelper(child, Indent & " ")

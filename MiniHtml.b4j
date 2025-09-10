@@ -49,7 +49,7 @@ Module9=EM
 NumberOfFiles=0
 NumberOfLibraries=3
 NumberOfModules=42
-Version=10.2
+Version=10.3
 @EndOfDesignText@
 'Non-UI application (console / server application)
 #Region Project Attributes 
@@ -62,6 +62,7 @@ Version=10.2
 
 Sub Process_Globals
 	Private HtmlParser As MiniHtmlParser
+	Public Const COLOR_POST As Int = -29696
 End Sub
 
 Sub AppStart (Args() As String)
