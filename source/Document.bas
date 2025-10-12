@@ -10,7 +10,7 @@ Sub Class_Globals
 	Private mFlat As Boolean
 End Sub
 
-Public Sub Initialize '(Name As String)
+Public Sub Initialize
 	mBuilder.Initialize
 End Sub
 

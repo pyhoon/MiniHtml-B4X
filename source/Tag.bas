@@ -4,8 +4,8 @@ ModulesStructureVersion=1
 Type=Class
 Version=4.5
 @EndOfDesignText@
-' Credit to: EnriqueGonzalez
-' Enhanced by: Aeric
+' Created by: Aeric
+' Credit to:  EnriqueGonzalez
 Sub Class_Globals
 	Private mName As String
 	Private mMode As String
@@ -117,8 +117,8 @@ Public Sub setName (tagName As String) As Tag
 	Return Me
 End Sub
 
-Public Sub innerTag (index As Int) As Tag
-	Return innerTags.Get(index)
+Public Sub innerTag (tagIndex As Int) As Tag
+	Return innerTags.Get(tagIndex)
 End Sub
 
 Public Sub innerTagById (Id As String) As Tag
@@ -157,6 +157,7 @@ Public Sub addMeta2 (keyvals As Map)
 	innerTags.Add(Html.create("meta").attribute2(keyvals))
 End Sub
 
+' Deprecated. Use responsive.
 Public Sub meta_preset As Tag
 	addMeta("charset", "UTF-8")
 	addMeta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1"))
@@ -164,14 +165,37 @@ Public Sub meta_preset As Tag
 	Return Me
 End Sub
 
-Public Sub link (keyvals As Map) As Tag
+Public Sub responsive As Tag
+	addMeta("charset", "UTF-8")
+	addMeta2(CreateMap("name": "viewport", "content": "width=device-width, initial-scale=1"))
+	Return Me
+End Sub
+
+Public Sub link (href As String, rel As String, integrity As String, crossorigin As String) As Tag
+	Return link3(href, rel, integrity, crossorigin, "", "", "")
+End Sub
+
+Public Sub link2 (keyvals As Map) As Tag
 	innerTags.Add(Html.create("link").attribute2(keyvals))
 	Return Me
 End Sub
 
+Public Sub link3 (href As String, rel As String, integrity As String, crossorigin As String, titleText As String, typeText As String, asText As String) As Tag
+	Dim Map1 As Map
+	Map1.Initialize
+	If href <> "" Then Map1.Put("href", href)
+	If rel <> "" Then Map1.Put("rel", rel)
+	If integrity <> "" Then Map1.Put("integrity", integrity)
+	If crossorigin <> "" Then Map1.Put("crossorigin", crossorigin)
+	If titleText <> "" Then Map1.Put("title", titleText)
+	If typeText <> "" Then Map1.Put("type", typeText)
+	If asText <> "" Then Map1.Put("as", asText)
+	Return link2(Map1)
+End Sub
+
+' rel="stylesheet"
 Public Sub linkCss (href As String) As Tag
-	innerTags.Add(Html.create("link").attribute2(CreateMap("href": href, "rel": "stylesheet")))
-	Return Me
+	Return link2(CreateMap("href": href, "rel": "stylesheet"))
 End Sub
 
 Public Sub cdnScript (src As String, integrity As String) As Tag
@@ -208,14 +232,22 @@ Public Sub Text (value As String) As Tag
 	Return Me
 End Sub
 
-Public Sub script (value As String) As Tag
-	innerTags.Add(Html.create("script").attribute("src", value))
+Public Sub script (src As String, integrity As String, crossorigin As String) As Tag
+	Dim Map1 As Map
+	Map1.Initialize
+	Map1.Put("src", src)
+	If integrity <> "" Then Map1.Put("integrity", integrity)
+	If crossorigin <> "" Then Map1.Put("crossorigin", crossorigin)
+	Return script2(Map1)
+End Sub
+
+Public Sub script2 (keyvals As Map) As Tag
+	innerTags.Add(Html.create("script").attribute2(keyvals))
 	Return Me
 End Sub
 
-Public Sub script2 (value As String, keyvals As Map) As Tag
-	innerTags.Add(Html.create("script").attribute("src", value).attribute2(keyvals))
-	Return Me
+Public Sub scriptSrc (src As String) As Tag
+	Return script2(CreateMap("src": src))
 End Sub
 
 Public Sub style (value As String) As Tag
@@ -421,6 +453,16 @@ Public Sub StylesAsString As String
 		sb.Append($"${key}:${IIf(mFlat, "", " ")}${mStyles.Get(key)}"$)
 	Next
 	Return sb.ToString
+End Sub
+
+Public Sub addLink (href As String, rel as String) As Tag
+	innerTags.Add(Html.create("link").attribute2(CreateMap("href": href, "rel": "stylesheet")))
+	Return Me
+End Sub
+
+Public Sub addLink2 (href As String) As Tag
+	innerTags.Add(Html.create("link").attribute2(CreateMap("href": href, "rel": "stylesheet")))
+	Return Me
 End Sub
 
 Public Sub setMode (TagMode As String)

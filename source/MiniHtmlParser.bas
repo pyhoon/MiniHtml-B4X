@@ -319,3 +319,32 @@ Public Sub UnescapeEntities(XmlInput As String) As String
 	If lastMatchEnd < XmlInput.Length Then sb.Append(XmlInput.SubString(lastMatchEnd))
 	Return sb.ToString
 End Sub
+
+Public Sub ConvertToTag (node1 As HtmlNode) As Tag
+	Dim parent As Tag
+	parent.Initialize(node1.Name)
+	Dim class1 As String = GetAttributeValue(node1, "class", "")
+	Dim style1 As String = GetAttributeValue(node1, "style", "")
+	
+	If class1 <> "" Then parent.addClass(class1)
+	If style1 <> "" Then parent.addStyle(style1)
+	
+	For Each att As HtmlAttribute In node1.Attributes
+		If att.Key <> "class" And att.Key <> "style" Then
+			If att.Key = "value" And att.Value <> "" Then
+				If node1.Name = "input" Then 
+					parent.attribute(att.Key, att.Value)
+				Else
+					parent.Text(att.Value)
+				End If
+			Else
+				parent.attribute(att.Key, att.Value)
+			End If
+		End If
+	Next
+	For Each child As HtmlNode In node1.Children
+		Dim tag2 As Tag = ConvertToTag(child)
+		parent.add(tag2)
+	Next
+	Return parent
+End Sub

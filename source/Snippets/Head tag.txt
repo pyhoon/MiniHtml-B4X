@@ -1,0 +1,5 @@
+Head.up(html1) _
+.Meta_Preset _
+.title("MiniHTML Demo") _
+.linkcss("css/bootstrap.min.css") _
+.script("js/bootstrap.bundle.min.js")

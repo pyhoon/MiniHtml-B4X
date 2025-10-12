@@ -1,0 +1,1 @@
+Button.addType("submit").text("Submit").addClass("btn btn-primary mt-3 text-center").up(div4)

@@ -1,0 +1,1 @@
+Input.addType("email").addId("email").addClass("form-control").required.up(div3)
