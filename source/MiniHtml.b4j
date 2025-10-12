@@ -14,15 +14,15 @@ Module15=H5
 Module16=H6
 Module17=Head
 Module18=Html
-Module19=IMG
+Module19=Img
 Module2=Body
 Module20=Input
 Module21=Italic
 Module22=Label
-Module23=LI
+Module23=Li
 Module24=Meta
 Module25=MiniHtmlParser
-Module26=OL
+Module26=Ol
 Module27=Option
 Module28=Paragraph
 Module29=Plain
@@ -33,19 +33,19 @@ Module32=Strong
 Module33=Table
 Module34=Tag
 Module35=Tbody
-Module36=TD
+Module36=Td
 Module37=Textarea
-Module38=TH
+Module38=Th
 Module39=Thead
-Module4=BR
-Module40=TR
-Module41=UL
+Module4=Br
+Module40=Tr
+Module41=Ul
 Module42=Underline
 Module5=Button
-Module6=DEL
-Module7=DIV
+Module6=Del
+Module7=Div
 Module8=Document
-Module9=EM
+Module9=Em
 NumberOfFiles=0
 NumberOfLibraries=3
 NumberOfModules=42
@@ -56,10 +56,17 @@ Version=10.3
 	#CommandLineArgs:
 	#MergeLibraries: True
 	#LibraryName: MiniHtml
-	#LibraryVersion: 0.09
+	#LibraryVersion: 0.10
 	#LibraryAuthor: Aeric
 #End Region
-
+#Region Macros
+'#Macro: Title, Export as zip, ide://run?file=%B4X%\Zipper.jar&Args=%PROJECT_NAME%.zip
+#Macro: Title, Update Version, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%\..\..&Args=%PROJECT%\..\..&Args=Version&Args=3.80
+#Macro: Title, Create B4xLib, ide://run?file=%JAVABIN%\jar.exe&WorkingDirectory=..&args=-cMf&args=..\..\release\%PROJECT_NAME%.b4xlib&args=..\*ORM*.bas&args=..\..\manifest.txt&args=..\..\LICENSE
+#Macro: Title, Release folder, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\..\release
+#Macro: Title, Copy to AddLibs, ide://run?file=%COMSPEC%&args=/c&args=copy&args=%PROJECT%\..\..\release\*.b4xlib&args=%ADDITIONAL%\..\B4X
+'#Macro: Title, Sync, ide://run?file=%WINDIR%\System32\Robocopy.exe&args=..\..\Shared+Files&args=..\Files&FilesSync=True
+#End Region
 Sub Process_Globals
 	Private HtmlParser As MiniHtmlParser
 	Public Const COLOR_POST As Int = -29696
@@ -86,7 +93,7 @@ Sub GenerateHtml As String
 	Dim body1 As Tag = Body.up(html1)
 	Dim main1 As Tag = Html.create("main").up(body1).addClass("container").addStyle("margin-top: 30px")
 	main1.comment(" Example: https://getbootstrap.com/docs/5.3/examples/heroes/ ")
-	Dim div1 As Tag = DIV.up(main1).addClass("container")
+	Dim div1 As Tag = Div.up(main1).addClass("container")
 	Dim div2 As Tag = DIV.up(div1).addClass("row align-items-center py-5")
 	Dim col1 As Tag = DIV.up(div2).addClass("col-lg-7 text-center")
 	H1.addClass("display-4 fw-bold lh-1 text-body-emphasis mb-3").Text("Vertically centered hero sign-up form").up(col1)
@@ -114,7 +121,7 @@ Sub GenerateHtml As String
 	Dim root As HtmlNode = HtmlParser.Parse(loginForm)
 	If root.IsInitialized Then
 		Dim newTag As Tag = ConvertTagNodeToTag(root.Children.Get(0))
-		DIV.up(div2).addClass("col-lg-5 col-md-10 mx-auto").add(newTag)
+		Div.up(div2).addClass("col-lg-5 col-md-10 mx-auto").add(newTag)
 	End If
 	Return html1.build
 End Sub
