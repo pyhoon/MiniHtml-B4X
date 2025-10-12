@@ -69,7 +69,6 @@ Version=10.3
 #End Region
 Sub Process_Globals
 	Private HtmlParser As MiniHtmlParser
-	Public Const COLOR_POST As Int = -29696
 End Sub
 
 Sub AppStart (Args() As String)
@@ -94,11 +93,11 @@ Sub GenerateHtml As String
 	Dim main1 As Tag = Html.create("main").up(body1).addClass("container").addStyle("margin-top: 30px")
 	main1.comment(" Example: https://getbootstrap.com/docs/5.3/examples/heroes/ ")
 	Dim div1 As Tag = Div.up(main1).addClass("container")
-	Dim div2 As Tag = DIV.up(div1).addClass("row align-items-center py-5")
-	Dim col1 As Tag = DIV.up(div2).addClass("col-lg-7 text-center")
+	Dim div2 As Tag = Div.up(div1).addClass("row align-items-center py-5")
+	Dim col1 As Tag = Div.up(div2).addClass("col-lg-7 text-center")
 	H1.addClass("display-4 fw-bold lh-1 text-body-emphasis mb-3").Text("Vertically centered hero sign-up form").up(col1)
 	Paragraph.addClass("col-lg-10 fs-4").Text("Below is an example form built entirely with Bootstrap’s form controls. Each required form group has a validation state that can be triggered by attempting to submit the form without completing it.").up(col1)
-	
+
 	Dim loginForm As String = $"<form class="p-4 p-md-5 border rounded-3 bg-body-tertiary">
           <div class="form-floating mb-3">
             <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
