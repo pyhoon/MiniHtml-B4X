@@ -21,6 +21,7 @@ Public Sub attribute2 (keyvals As Map) As Tag
 	Return init.attribute2(keyvals)
 End Sub
 
+'Add to Parent and return this tag (child)
 Public Sub up (Parent As Tag) As Tag
 	Return init.up(Parent)
 End Sub

@@ -2,11 +2,11 @@
 Group=Modules
 ModulesStructureVersion=1
 Type=StaticCode
-Version=10
+Version=10.3
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "form"
+	Private Const tagname As String = "i"
 End Sub
 
 Public Sub init As Tag
@@ -39,8 +39,4 @@ End Sub
 
 Public Sub addStyle (name As String) As Tag
 	Return init.addStyle(name)
-End Sub
-
-Public Sub action (value As String) As Tag
-	Return init.attribute("action", value)
 End Sub
