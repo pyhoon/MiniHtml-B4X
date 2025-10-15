@@ -63,13 +63,13 @@ End Sub
 Private Sub CloseElement (Parent As HtmlNode)
 	Dim start As Int = mIndex + 1
 	ReadUntil(">")
-	Dim name As String = mHtml.SubString2(start, mIndex - 1).Trim
+	Dim pname As String = mHtml.SubString2(start, mIndex - 1).Trim
 	Parent.Closed = True
-	If name <> Parent.Name Then
+	If pname <> Parent.Name Then
 		Dim CorrectParent As HtmlNode
 		Dim p As HtmlNode = Parent.Parent
 		Do While p.IsInitialized
-			If p.Name = name Then
+			If p.Name = pname Then
 				CorrectParent = p
 				Exit
 			End If
@@ -333,12 +333,12 @@ Public Sub ConvertToTag (node1 As HtmlNode) As Tag
 		If att.Key <> "class" And att.Key <> "style" Then
 			If att.Key = "value" And att.Value <> "" Then
 				If node1.Name = "input" Then 
-					parent.attribute(att.Key, att.Value)
+					parent.Set(att.Key, att.Value)
 				Else
 					parent.Text(att.Value)
 				End If
 			Else
-				parent.attribute(att.Key, att.Value)
+				parent.Set(att.Key, att.Value)
 			End If
 		End If
 	Next

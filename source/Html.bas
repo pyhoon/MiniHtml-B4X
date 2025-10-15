@@ -13,22 +13,22 @@ Public Sub init As Tag
 	Return create(tagname)
 End Sub
 
-Public Sub create (name As String) As Tag
+Public Sub create (newtag As String) As Tag
 	Dim tag1 As Tag
-	tag1.Initialize(name)
+	tag1.Initialize(newtag)
 	Return tag1
 End Sub
 
-Public Sub attribute (key As String, value As String) As Tag
-	Return create(tagname).attribute(key, value)
+Public Sub Set (key As String, value As String) As Tag
+	Return create(tagname).Set(key, value)
 End Sub
 
-Public Sub attribute2 (keyvals As Map) As Tag
-	Return create(tagname).attribute2(keyvals)
+Public Sub Set2 (keyvals As Map) As Tag
+	Return create(tagname).Set2(keyvals)
 End Sub
 
 Public Sub lang (value As String) As Tag
-	Return create(tagname).attribute("lang", value)
+	Return create(tagname).Set("lang", value)
 End Sub
 
 ' Add comment on new line

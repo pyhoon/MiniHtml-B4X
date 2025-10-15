@@ -13,12 +13,12 @@ Public Sub init As Tag
 	Return Html.create(tagname)
 End Sub
 
-Public Sub attribute (key As String, value As String) As Tag
-	Return init.attribute(key, value)
+Public Sub Set (key As String, value As String) As Tag
+	Return init.Set(key, value)
 End Sub
 
-Public Sub attribute2 (keyvals As Map) As Tag
-	Return init.attribute2(keyvals)
+Public Sub Set2 (keyvals As Map) As Tag
+	Return init.Set2(keyvals)
 End Sub
 
 Public Sub up (Parent As Tag) As Tag
