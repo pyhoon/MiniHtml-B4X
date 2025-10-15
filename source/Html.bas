@@ -19,16 +19,16 @@ Public Sub create (newtag As String) As Tag
 	Return tag1
 End Sub
 
-Public Sub Set (key As String, value As String) As Tag
-	Return create(tagname).Set(key, value)
+Public Sub Attr (key As String, value As String) As Tag
+	Return create(tagname).Attr(key, value)
 End Sub
 
-Public Sub Set2 (keyvals As Map) As Tag
-	Return create(tagname).Set2(keyvals)
+Public Sub Attr2 (keyvals As Map) As Tag
+	Return create(tagname).Attr2(keyvals)
 End Sub
 
 Public Sub lang (value As String) As Tag
-	Return create(tagname).Set("lang", value)
+	Return create(tagname).Attr("lang", value)
 End Sub
 
 ' Add comment on new line

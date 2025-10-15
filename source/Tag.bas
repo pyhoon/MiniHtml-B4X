@@ -189,11 +189,11 @@ Public Sub title (value As String) As Tag
 End Sub
 
 Public Sub addMeta (key As String, value As String)
-	mChildren.Add(Html.create("meta").Set(key, value))
+	mChildren.Add(Html.create("meta").Attr(key, value))
 End Sub
 
 Public Sub addMeta2 (keyvals As Map)
-	mChildren.Add(Html.create("meta").Set2(keyvals))
+	mChildren.Add(Html.create("meta").Attr2(keyvals))
 End Sub
 
 ' Deprecated. Use responsive.
@@ -215,7 +215,7 @@ Public Sub link (href As String, rel As String, integrity As String, crossorigin
 End Sub
 
 Public Sub link2 (keyvals As Map) As Tag
-	mChildren.Add(Html.create("link").Set2(keyvals))
+	mChildren.Add(Html.create("link").Attr2(keyvals))
 	Return Me
 End Sub
 
@@ -242,7 +242,7 @@ Public Sub cdnScript (src As String, integrity As String) As Tag
 End Sub
 
 Public Sub cdnScript2 (src As String, integrity As String, crossorigin As String) As Tag
-	mChildren.Add(Html.create("script").Set2(CreateMap("src": src, "integrity": integrity, "crossorigin": crossorigin)))
+	mChildren.Add(Html.create("script").Attr2(CreateMap("src": src, "integrity": integrity, "crossorigin": crossorigin)))
 	Return Me
 End Sub
 
@@ -251,7 +251,7 @@ Public Sub cdnStyle (href As String, integrity As String) As Tag
 End Sub
 
 Public Sub cdnStyle2 (href As String, integrity As String, crossorigin As String) As Tag
-	mChildren.Add(Html.create("link").Set2(CreateMap("href": href, "rel": "stylesheet", "integrity": integrity, "crossorigin": crossorigin)))
+	mChildren.Add(Html.create("link").Attr2(CreateMap("href": href, "rel": "stylesheet", "integrity": integrity, "crossorigin": crossorigin)))
 	Return Me
 End Sub
 
@@ -293,12 +293,12 @@ Public Sub script (src As String, integrity As String, crossorigin As String) As
 End Sub
 
 Public Sub script2 (keyvals As Map) As Tag
-	mChildren.Add(Html.create("script").Set2(keyvals))
+	mChildren.Add(Html.create("script").Attr2(keyvals))
 	Return Me
 End Sub
 
 Public Sub scriptSrc (src As String) As Tag
-	mChildren.Add(Html.create("script").Set("src", src))
+	mChildren.Add(Html.create("script").Attr("src", src))
 	Return Me
 End Sub
 
@@ -478,24 +478,28 @@ Public Sub sib4 (siblingTag As Tag) As Tag
 	Return AddSibling4(siblingTag)
 End Sub
 
-'Return maps of attributes
-Public Sub Get As Map
+'Replace/return maps of attributes
+Public Sub getAttributes As Map
 	Return mAttributes
 End Sub
-
-'Assign attributes from map
-Public Sub PutMap (keyvals As Map)
+'Replace/return maps of attributes
+Public Sub setAttributes (keyvals As Map)
 	mAttributes = keyvals
 End Sub
 
+'Replace/return maps of attributes
+'Public Sub Get As Map
+'	Return getAttributes
+'End Sub
+
 'Set an attribute with a key and value
-Public Sub Set (key As String, value As String) As Tag
+Public Sub Attr (key As String, value As String) As Tag
 	mAttributes.Put(key, value)
 	Return Me
 End Sub
 
 'Insert more attributes from map
-Public Sub Set2 (keyvals As Map) As Tag
+Public Sub Attr2 (keyvals As Map) As Tag
 	For Each key As String In keyvals.Keys
 		Dim value As String = keyvals.Get(key)
 		mAttributes.Put(key, value)
@@ -503,19 +507,14 @@ Public Sub Set2 (keyvals As Map) As Tag
 	Return Me
 End Sub
 
-'Add single attribute without value
-Public Sub Set3 (key As String) As Tag
+'Add a no-value attribute
+Public Sub Attr3 (key As String) As Tag
 	mAttributes.Put(key, "")
 	Return Me
 End Sub
 
-'same as setJsonAttribute
-Public Sub Attr (json As String) As Tag
-	Return setJsonAttributes(json)
-End Sub
-
 'Add attributes by passing a json object
-Public Sub setJsonAttributes (json As String) As Tag
+Public Sub Attr4 (json As String) As Tag
 	Try
 		Dim keyvals As Map = json.As(JSON).ToMap
 		For Each key As String In keyvals.Keys
@@ -527,6 +526,20 @@ Public Sub setJsonAttributes (json As String) As Tag
 	End Try
 	Return Me
 End Sub
+
+'Add attributes by passing a json object
+'Public Sub setAttributesFromJson (json As String) As Tag
+'	Try
+'		Dim keyvals As Map = json.As(JSON).ToMap
+'		For Each key As String In keyvals.Keys
+'			Dim value As String = keyvals.Get(key)
+'			mAttributes.Put(key, value)
+'		Next
+'	Catch
+'		Log(LastException)
+'	End Try
+'	Return Me
+'End Sub
 
 Public Sub addId (value As String) As Tag
 	mAttributes.Put("id", value)
@@ -615,12 +628,12 @@ Public Sub StylesAsString As String
 End Sub
 
 Public Sub addLink (href As String, rel As String) As Tag
-	mChildren.Add(Html.create("link").Set2(CreateMap("href": href, "rel": "stylesheet")))
+	mChildren.Add(Html.create("link").Attr2(CreateMap("href": href, "rel": "stylesheet")))
 	Return Me
 End Sub
 
 Public Sub addLink2 (href As String) As Tag
-	mChildren.Add(Html.create("link").Set2(CreateMap("href": href, "rel": "stylesheet")))
+	mChildren.Add(Html.create("link").Attr2(CreateMap("href": href, "rel": "stylesheet")))
 	Return Me
 End Sub
 

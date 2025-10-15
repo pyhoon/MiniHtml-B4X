@@ -13,12 +13,12 @@ Public Sub init As Tag
 	Return Html.create(tagname)
 End Sub
 
-Public Sub Set (key As String, value As String) As Tag
-	Return init.Set(key, value)
+Public Sub Attr (key As String, value As String) As Tag
+	Return init.Attr(key, value)
 End Sub
 
-Public Sub Set2 (keyvals As Map) As Tag
-	Return init.Set2(keyvals)
+Public Sub Attr2 (keyvals As Map) As Tag
+	Return init.Attr2(keyvals)
 End Sub
 
 Public Sub up (Parent As Tag) As Tag
@@ -39,10 +39,10 @@ End Sub
 
 'Set id attribute
 Public Sub id (value As String) As Tag
-	Return init.Set("id", value)
+	Return init.Attr("id", value)
 End Sub
 
 'Set name attribute
 Public Sub name (value As String) As Tag
-	Return init.Set("name", value)
+	Return init.Attr("name", value)
 End Sub

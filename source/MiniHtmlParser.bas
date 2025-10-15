@@ -334,7 +334,7 @@ Public Sub ConvertToTag (node1 As HtmlNode) As Tag
 			If att.Key = "value" And att.Value.Trim.Length > 0 Then
 				If node1.Name = "input" Then ' has value key
 					LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
-					parent.Set(att.Key, att.Value.Trim)
+					parent.Attr(att.Key, att.Value.Trim)
 				Else
 					' Experimental, ignore empty values
 					If att.Value.Trim.Length > 0 Then
@@ -343,17 +343,17 @@ Public Sub ConvertToTag (node1 As HtmlNode) As Tag
 					End If
 				End If
 			Else
-				parent.Set(att.Key, att.Value) ' type, id, placeholder, for
+				parent.Attr(att.Key, att.Value) ' type, id, placeholder, for
 			End If
 		End If
 	Next
 	For Each child As HtmlNode In node1.Children
 		Dim tag2 As Tag = ConvertToTag(child)
 		If tag2.TagName = "text" Then
-			If tag2.Get.Size > 0 And tag2.Get.ContainsKey("value") Then
+			If tag2.Attributes.ContainsKey("value") Then
 				LogColor(tag2.Build & "         ** ignored **", COLOR_RED) ' ignore this
 			Else
-				LogColor(tag2.Build, COLOR_BLUE) ' Text
+				LogColor(tag2.Build & "         " & tag2.Attributes, COLOR_BLUE) ' Text
 				parent.add(tag2)
 			End If
 		Else
