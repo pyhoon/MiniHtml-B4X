@@ -105,18 +105,19 @@ Public Sub Build3 (indent As Int, Line1CRLF As Boolean) As String
 	For Each tagOrString In mChildren
 		If tagOrString Is Tag Then
 			Dim mCurrent As Tag = tagOrString
-			If mCurrent.TagName = "span" Then	' make span same line
-				SB.Append(mCurrent.build)
-			Else
-				SB.Append(mCurrent.build3(indent + 1, True))				
-			End If
+			Select mCurrent.TagName
+				Case "span", "strong", "small", "em", "b", "u"
+					SB.Append(mCurrent.build) ' stay on same line
+				Case Else
+					SB.Append(mCurrent.build3(indent + 1, True))
+			End Select
 		Else
 			SB.Append(tagOrString)
 		End If
 	Next
 	Select mMode
 		Case mUniline
-			SB.Append("</" & mTagName & ">")		
+			SB.Append("</" & mTagName & ">")
 		Case mNormal
 			SB.Append(CRLF)
 			For n = 0 To indent
@@ -297,7 +298,8 @@ Public Sub script2 (keyvals As Map) As Tag
 End Sub
 
 Public Sub scriptSrc (src As String) As Tag
-	Return script2(CreateMap("src": src))
+	mChildren.Add(Html.create("script").Set("src", src))
+	Return Me
 End Sub
 
 Public Sub style (value As String) As Tag
