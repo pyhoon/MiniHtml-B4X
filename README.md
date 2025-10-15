@@ -19,8 +19,8 @@ Sub GenerateHtml As String
 	.Add(Div.cls("card-body")) _
 	.Add(Form.addAction("#"))
 	form1.Add(Div.cls("form-group")) _
-	.Add(Label.forId("email")).Text("Email").Parent _
-	.sib(Input.addType("email").id("email").cls("form-control").required)
+	.Add(Label.forId("email").Text("Email")) _
+	.AddSibling(Input.addType("email").id("email").cls("form-control").required)
 	form1.Add(Div.cls("text-center")) _
 	.Add(Button.addType("submit").Text("Submit").cls("btn btn-primary mt-3 text-center"))
 	Paragraph.Text("This is a ") _
@@ -51,8 +51,8 @@ End Sub
           <form action="#">
             <div class="form-group">
               <label for="email">Email</label>
+              <input type="email" id="email" class="form-control" required>
             </div>
-            <input type="email" id="email" class="form-control" required>
             <div class="text-center">
               <button type="submit" class="btn btn-primary mt-3 text-center">Submit</button>
             </div>
