@@ -31,12 +31,12 @@ Public Sub lang (value As String) As Tag
 	Return create(tagname).attribute("lang", value)
 End Sub
 
-' append on new line
+' Add comment on new line
 Public Sub comment (value As String) As Tag
-	Return create("").addSibling2(create("").Text($"<!--${value}-->"$))
+	Return create("").comment(value)
 End Sub
 
-' append on same line
+' Add comment on same line
 Public Sub comment2 (value As String) As Tag
-	Return create("").Text($"<!--${value}-->"$)
+	Return create("").comment2(value)
 End Sub

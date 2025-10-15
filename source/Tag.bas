@@ -9,14 +9,14 @@ Version=4.5
 Sub Class_Globals
 	Private mName As String
 	Private mMode As String
+	Private mIndentString As String
+	Private mFlat As Boolean
 	Private mParent As Tag
 	Private mChildren As List
 	Private mAttributes As Map
-	Private mClasses As List
 	Private mStyles As Map
-	Private mFlat As Boolean
+	Private mClasses As List
 	Public Const mUniline 	As String = "uniline" 	' <tag></tag>
-	'Public Const mSpan 	As String = "span"		' <span></span>
 	Public Const mNormal 	As String = "normal"	' <tag></tag> (multiline)
 	Public Const mLink 		As String = "link"		' <tag />
 	Public Const mMeta 		As String = "meta"		' <meta>
@@ -30,8 +30,8 @@ Public Sub Initialize (tagName As String) As Tag
 	mStyles.Initialize
 	mName = tagName
 	Select mName.ToLowerCase
-		'Case "head", "form", "table"
-		'	mMode = mNormal
+		Case "head", "form", "table"
+			mMode = mNormal
 		Case "meta", "input"
 			mMode = mMeta
 		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "a", "i", "b", "u", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td", "small"
@@ -43,6 +43,7 @@ Public Sub Initialize (tagName As String) As Tag
 		Case Else
 			mMode = mNormal
 	End Select
+	mIndentString = "  "
 	Return Me
 End Sub
 
@@ -61,7 +62,7 @@ Public Sub build3 (indent As Int, Line1CRLF As Boolean) As String
 		SB.Append(CRLF)
 	End If
 	For n = 0 To indent
-		SB.Append(TAB)
+		SB.Append(mIndentString)
 	Next
 	If Not(mMode = "") Then
 		SB.Append("<" & mName)
@@ -86,16 +87,21 @@ Public Sub build3 (indent As Int, Line1CRLF As Boolean) As String
 	End Select
 	For Each tagOrString In mChildren
 		If tagOrString Is Tag Then
-			SB.Append(tagOrString.As(Tag).build3(indent + 1, True))
+			Dim mCurrentTag As Tag = tagOrString
+			If mCurrentTag.Name = "span" Then	' make span same line
+				SB.Append(mCurrentTag.build)
+			Else
+				SB.Append(mCurrentTag.build3(indent + 1, True))				
+			End If
 		Else
-			SB.Append(tagOrString.As(String))
+			SB.Append(tagOrString)
 		End If
 	Next
 	Select mMode
 		Case mNormal
 			SB.Append(CRLF)
 			For n = 0 To indent
-				SB.Append("	")
+				SB.Append(mIndentString)
 			Next
 			SB.Append("</" & mName & ">")
 		Case mUniline
@@ -104,7 +110,7 @@ Public Sub build3 (indent As Int, Line1CRLF As Boolean) As String
 	Return SB.ToString
 End Sub
 
-' set to true for no tabs and CRLF
+' set to true for no indents and CRLF
 Public Sub setFlat (Value As Boolean)
 	mFlat = Value
 End Sub
@@ -146,14 +152,14 @@ Public Sub PrintChildren
 	Next
 End Sub
 
-' append on new line
+' Add comment on new line
 Public Sub comment (value As String) As Tag
 	mChildren.Add(Html.create(mNoTag))
 	mChildren.Add($"<!--${value}-->"$)
 	Return Me
 End Sub
 
-' append on same line
+' Add comment on same line
 Public Sub comment2 (value As String) As Tag
 	mChildren.Add($"<!--${value}-->"$)
 	Return Me
@@ -247,7 +253,8 @@ Public Sub TextInline (value As String)
 	mChildren.Add(value)
 End Sub
 
-Public Sub innerText As String
+' No use, set to Private before remove
+Private Sub innerText As String 'ignore
 	If mChildren.Size > 0 Then
 		If mChildren.Get(0).As(String).StartsWith("[") = False Then
 			Return mChildren.Get(0)
@@ -299,7 +306,6 @@ End Sub
 Public Sub add (ChildTag As Tag) As Tag
 	mChildren.Add(ChildTag)
 	ChildTag.Parent = Me
-	Log("adding " & ChildTag.Name)
 	Return ChildTag
 End Sub
 
@@ -340,30 +346,25 @@ End Sub
 Public Sub addSibling (siblingTag As Tag) As Tag
 	mParent.Add(siblingTag)
 	siblingTag.Parent = mParent
-	Log("Parent=" & mParent)
-	'Log("siblingTag added: " & siblingTag.build & " Me=" & Me.As(Tag).build)
 	Return siblingTag
 End Sub
 
 'Add a Sibling and return parent tag (parent)
 Public Sub addSibling2 (siblingTag As Tag) As Tag
-	Log("Parent=" & mParent)
 	mParent.Add(siblingTag)
 	siblingTag.Parent = mParent
-	Return Me
+	Return mParent
 End Sub
 
 'Add a Sibling only (no tag)
 Public Sub addSibling3 (siblingTag As Tag)
 	mParent.Add(siblingTag)
 	siblingTag.Parent = mParent
-	Log("Parent=" & mParent)
 End Sub
 
 'Add a Sibling and return the current tag (current)
 Public Sub addSibling4 (siblingTag As Tag) As Tag
 	mParent.Add(siblingTag)
-	Log("adding " & siblingTag.Name)
 	Return Me
 End Sub
 
@@ -397,6 +398,27 @@ Public Sub up3 (ParentTag As Tag)
 	addTo3(ParentTag)
 End Sub
 
+
+'Add a Sibling and return the sibling tag (sibling)
+Public Sub sib (siblingTag As Tag) As Tag
+	Return addSibling(siblingTag)
+End Sub
+
+'Add a Sibling and return parent tag (parent)
+Public Sub sib2 (siblingTag As Tag) As Tag
+	Return addSibling2(siblingTag)
+End Sub
+
+'Add a Sibling only (no tag)
+Public Sub sib3 (siblingTag As Tag)
+	addSibling3(siblingTag)
+End Sub
+
+'Add a Sibling and return the current tag (current)
+Public Sub sib4 (siblingTag As Tag) As Tag
+	Return addSibling4(siblingTag)
+End Sub
+
 'Add an attribute
 Public Sub attribute (key As String, value As String) As Tag
 	mAttributes.Put(key, value)
@@ -414,10 +436,7 @@ End Sub
 
 'Add single attribute without value
 Public Sub attribute3 (name As String) As Tag
-	Log("attribute3=" & Me.As(Tag).build)
-'	Log($"Me is Initialized= ${Me.as(Tag).IsInitialized}"$)
-'	mAttributes.Put(name, "")
-'	Log(mAttributes.As(JSON).ToString)
+	mAttributes.Put(name, "")
 	Return Me.As(Tag)
 End Sub
 

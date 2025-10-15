@@ -73,11 +73,17 @@ Sub AppStart (Args() As String)
 	Dim doc As Document
 	doc.Initialize
 	doc.AppendDocType
+	' begin test for supporting unusual case that should not be use 
+	doc.Append(Html.comment(" A comment ").build)
+	doc.Append(Html.comment2(" comment 2 ").build).Append2("same line text")
+	doc.Append(Div.addClass("test").Text("Testing").add(Html.create("").Text("Out side")).build)
+	doc.Append(H1.addClass("text-uppercase").Text("Title").build)
+	' end test
 	doc.Append(GenerateHtml)
 	Dim content As String = doc.ToString
 	'LogColor(content, BLUE)
 	File.WriteString(File.DirApp, "index.html", content)
-	StartMessageLoop
+	'StartMessageLoop
 End Sub
 
 Sub GenerateHtml As String
