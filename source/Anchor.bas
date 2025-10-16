@@ -13,37 +13,40 @@ Public Sub init As Tag
 	Return Html.create(tagname)
 End Sub
 
-Public Sub Attr (key As String, value As String) As Tag
-	Return init.Attr(key, value)
+Public Sub attr (key As String, value As String) As Tag
+	Return init.attr(key, value)
 End Sub
 
-Public Sub Attr2 (keyvals As Map) As Tag
-	Return init.Attr2(keyvals)
+Public Sub attr2 (keyvals As Map) As Tag
+	Return init.attr2(keyvals)
 End Sub
 
+'(same as AddTo)
+'Add to Parent and return current tag (child)
 Public Sub up (Parent As Tag) As Tag
 	Return init.up(Parent)
 End Sub
 
-Public Sub Text (value As String) As Tag
-	Return init.Text(value)
-End Sub
-
-Public Sub addHref (value As String) As Tag
-	Return init.Attr("href", value)
-End Sub
-
-' same as addClass (experimental)
-Public Sub cls (value As String) As Tag
-	Return init.cls(value)
-End Sub
-
-' same as addStyle (experimental)
-Public Sub sty (value As String) As Tag
-	Return init.sty(value)
+Public Sub text (value As String) As Tag
+	Return init.text(value)
 End Sub
 
 'Set id attribute
 Public Sub id (value As String) As Tag
-	Return init.Attr("id", value)
+	Return init.attr("id", value)
+End Sub
+
+'Set href attribute
+Public Sub href (value As String) As Tag
+	Return init.hrefOf(value)
+End Sub
+
+'Add a class
+Public Sub cls (value As String) As Tag
+	Return init.cls(value)
+End Sub
+
+'Add one or more styles separated by semicolon
+Public Sub sty (value As String) As Tag
+	Return init.sty(value)
 End Sub

@@ -36,12 +36,13 @@ Module35=Tag
 Module36=Tbody
 Module37=Td
 Module38=Textarea
-Module39=Th
+Module39=Tfoot
 Module4=Br
-Module40=Thead
-Module41=Tr
-Module42=Ul
-Module43=Underline
+Module40=Th
+Module41=Thead
+Module42=Tr
+Module43=Ul
+Module44=Underline
 Module5=Button
 Module6=Del
 Module7=Div
@@ -49,7 +50,7 @@ Module8=Document
 Module9=Dropdown
 NumberOfFiles=0
 NumberOfLibraries=3
-NumberOfModules=43
+NumberOfModules=44
 Version=10.3
 @EndOfDesignText@
 #Region Project Attributes
@@ -92,7 +93,7 @@ End Sub
 '	Head.up(html1).responsive _
 '	.title("MiniHTML Demo") _
 '	.linkCss("css/bootstrap.min.css") _
-'	.scriptSrc("js/bootstrap.bundle.min.js")
+'	.script("js/bootstrap.bundle.min.js")
 '	Dim body1 As Tag = Body.up(html1)
 '	Dim main1 As Tag = Html.create("main").up(body1) _
 '	.cls("container") _
@@ -141,23 +142,25 @@ Sub GenerateHtml As String
 	Head.up(html1).responsive _
 	.Title("MiniHTML Demo") _
 	.linkcss("css/bootstrap.min.css") _
-	.scriptSrc("js/bootstrap.bundle.min.js")
+	.script("js/bootstrap.bundle.min.js")
 	Dim main1 As Tag = Body.up(html1).add(Html.create("main")) _
 	.cls("container") _
 	.sty("margin-top: 30px")
-	'H1.Text("Hello, World!").up(main1)
-	'Dim form1 As Tag = main1.Add(Div.cls("card")) _
-	'.Add(Div.cls("card-body")) _
-	'.Add(Form.addAction("#"))
-	'form1.Add(Div.cls("form-group")) _
-	'.Add(Label.forId("email").Text("Email")) _
-	'.AddSibling(Input.addType("email").id("email").cls("form-control").required)
-	'form1.Add(Div.cls("text-center")) _
-	'.Add(Button.addType("submit").Text("Submit").cls("btn btn-primary mt-3 text-center"))
-	'Paragraph.Text("This is a ") _
-	'.Add2(Span.Text("red text").cls("text-danger")) _
-	'.Text(" in  a ") _
-	'.Add2(Bold.Text("paragraph")).up(main1)
+	
+	H1.text("Hello, World!").up(main1)
+	Dim form1 As Tag = main1.Add(Div.cls("card")) _
+	.Add(Div.cls("card-body")) _
+	.Add(Form.action("#"))
+	form1.Add(Div.cls("form-group")) _
+	.Add(Label.forId("email").text("Email")) _
+	.AddSibling(Input.typeOf("email").id("email").cls("form-control").required)
+	form1.Add(Div.cls("text-center")) _
+	.Add(Button.typeOf("submit").text("Submit").cls("btn btn-primary mt-3 text-center"))
+	Paragraph.text("This is a ") _
+	.Add2(Span.text("red text").cls("text-danger")) _
+	.text(" in  a ") _
+	.Add2(Bold.text("paragraph")).up(main1)
+	
 	main1.comment(" Example: https://getbootstrap.com/docs/5.3/examples/heroes/ ")
 	Dim container As Tag = main1.Add(Div.cls("container"))
 	Dim row1 As Tag = container.Add(Div.cls("row align-items-center py-5"))

@@ -13,10 +13,12 @@ Public Sub init As Tag
 	Return Html.create(tagname)
 End Sub
 
+'(same as AddTo)
+'Add to Parent and return current tag (child)
 Public Sub up (Parent As Tag) As Tag
 	Return init.up(Parent)
 End Sub
 
-Public Sub Text (value As String) As Tag
-	Return init.Text(value)
+Public Sub text (value As String) As Tag
+	Return init.text(value)
 End Sub

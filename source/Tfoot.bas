@@ -2,11 +2,11 @@
 Group=Modules
 ModulesStructureVersion=1
 Type=StaticCode
-Version=10
+Version=10.3
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "span"
+	Private Const tagname As String = "tfoot"
 End Sub
 
 Public Sub init As Tag
@@ -30,10 +30,6 @@ End Sub
 'Add to Parent and return current tag (child)
 Public Sub up (Parent As Tag) As Tag
 	Return init.up(Parent)
-End Sub
-
-Public Sub text (value As String) As Tag
-	Return init.text(value)
 End Sub
 
 'Set id attribute

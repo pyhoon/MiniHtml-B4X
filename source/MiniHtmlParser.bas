@@ -334,16 +334,16 @@ Public Sub ConvertToTag (node1 As HtmlNode) As Tag
 			If att.Key = "value" And att.Value.Trim.Length > 0 Then
 				If node1.Name = "input" Then ' has value key
 					LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
-					parent.Attr(att.Key, att.Value.Trim)
+					parent.attr(att.Key, att.Value.Trim)
 				Else
-					' Experimental, ignore empty values
+					' ignore empty values (experimental)
 					If att.Value.Trim.Length > 0 Then
 						LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
 						parent.Text(att.Value.Trim) ' value
 					End If
 				End If
 			Else
-				parent.Attr(att.Key, att.Value) ' type, id, placeholder, for
+				parent.attr(att.Key, att.Value) ' type, id, placeholder, for
 			End If
 		End If
 	Next
