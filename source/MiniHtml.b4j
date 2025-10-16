@@ -146,21 +146,19 @@ Sub GenerateHtml As String
 	Dim main1 As Tag = Body.up(html1).add(Html.create("main")) _
 	.cls("container") _
 	.sty("margin-top: 30px")
-	
-	H1.text("Hello, World!").up(main1)
-	Dim form1 As Tag = main1.Add(Div.cls("card")) _
-	.Add(Div.cls("card-body")) _
-	.Add(Form.action("#"))
-	form1.Add(Div.cls("form-group")) _
-	.Add(Label.forId("email").text("Email")) _
-	.AddSibling(Input.typeOf("email").id("email").cls("form-control").required)
-	form1.Add(Div.cls("text-center")) _
-	.Add(Button.typeOf("submit").text("Submit").cls("btn btn-primary mt-3 text-center"))
-	Paragraph.text("This is a ") _
-	.Add2(Span.text("red text").cls("text-danger")) _
-	.text(" in  a ") _
-	.Add2(Bold.text("paragraph")).up(main1)
-	
+	'H1.text("Hello, World!").up(main1)
+	'Dim form1 As Tag = main1.Add(Div.cls("card")) _
+	'.Add(Div.cls("card-body")) _
+	'.Add(Form.action("#"))
+	'form1.Add(Div.cls("form-group")) _
+	'.Add(Label.forId("email").text("Email")) _
+	'.AddSibling(Input.typeOf("email").id("email").cls("form-control").required)
+	'form1.Add(Div.cls("text-center")) _
+	'.Add(Button.typeOf("submit").text("Submit").cls("btn btn-primary mt-3 text-center"))
+	'Paragraph.text("This is a ") _
+	'.Add2(Span.text("red text").cls("text-danger")) _
+	'.text(" in  a ") _
+	'.Add2(Bold.text("paragraph")).up(main1)
 	main1.comment(" Example: https://getbootstrap.com/docs/5.3/examples/heroes/ ")
 	Dim container As Tag = main1.Add(Div.cls("container"))
 	Dim row1 As Tag = container.Add(Div.cls("row align-items-center py-5"))

@@ -1,1 +1,1 @@
-H1.Text("Hello, World!").up(main1)
+H1.text("Hello, World!")

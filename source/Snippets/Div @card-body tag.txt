@@ -1,1 +1,1 @@
-Dim div2 As Tag = Div.up(div1).addClass("card-body")
+Dim div2 As Tag = Div.cls("card-body").up(div1)
