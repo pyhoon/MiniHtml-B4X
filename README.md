@@ -12,7 +12,7 @@ Sub GenerateHtml As String
 	Head.up(html1).responsive _
 	.Title("MiniHTML Demo") _
 	.linkcss("css/bootstrap.min.css") _
-	.scriptSrc("js/bootstrap.bundle.min.js")
+	.script("js/bootstrap.bundle.min.js")
 	Dim main1 As Tag = Body.up(html1).add(Html.create("main")).cls("container").sty("margin-top: 30px")
 	H1.Text("Hello, World!").up(main1)
 	Dim form1 As Tag = main1.Add(Div.cls("card")) _
