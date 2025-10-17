@@ -6,7 +6,7 @@ Version=4.5
 @EndOfDesignText@
 ' Created by: Aeric
 ' Credit to:  EnriqueGonzalez
-' Version: 0.20
+' Version: 0.30
 Sub Class_Globals
 	Private mId As String
 	Private mName As String
@@ -20,11 +20,11 @@ Sub Class_Globals
 	Private mAttributes As Map
 	Private mStyles As Map
 	Private mClasses As List
-	Public Const mNoTag 	As String = ""
-	Public Const mMeta 		As String = "meta"		' <meta>
-	Public Const mLink 		As String = "link"		' <tag />
-	Public Const mUniline 	As String = "uniline" 	' <tag></tag>
-	Public Const mMultiline	As String = "multiline"	' <tag> CRLF </tag>
+	Private Const mNoTag     As String = ""
+	Private Const mMeta      As String = "meta"		' <meta>
+	Private Const mLink      As String = "link"		' <tag />
+	Private Const mUniline   As String = "uniline" 	' <tag></tag>
+	Private Const mMultiline As String = "multiline"	' <tag> CRLF </tag>
 End Sub
 
 ' Initialize tag with tagName
@@ -260,9 +260,8 @@ End Sub
 
 'code: <code>script("js/bootstrap.js")</code>
 'output: <code><script src="js/bootstrap.js"></script></code>
-Public Sub script (src As String) As Tag
-	mChildren.Add(Html.create("script").attr("src", src))
-	Return Me
+Public Sub script (value As String) As Tag
+	Return script2(CreateMap("src": value))
 End Sub
 
 'code: <code>script2(CreateMap("src": "js/bootstrap.js"))</code>
@@ -273,12 +272,12 @@ End Sub
 
 'code: <code>script3("$cdn$/dist/htmx.min.js", "sha384...", "anonymous")</code>
 Public Sub script3 (src As String, integrity As String, crossorigin As String) As Tag
-	Dim Map1 As Map
-	Map1.Initialize
-	Map1.Put("src", src)
-	If integrity <> "" Then Map1.Put("integrity", integrity)
-	If crossorigin <> "" Then Map1.Put("crossorigin", crossorigin)
-	Return script2(Map1)
+	Dim keyvals As Map
+	keyvals.Initialize
+	keyvals.Put("src", src)
+	If integrity <> "" Then keyvals.Put("integrity", integrity)
+	If crossorigin <> "" Then keyvals.Put("crossorigin", crossorigin)
+	Return script2(keyvals)
 End Sub
 
 'Public Sub style (value As String) As Tag
@@ -325,47 +324,47 @@ Public Sub setSiblings (SiblingsTag As List)
 End Sub
 
 'Add a Child and return the added tag (child)
-Public Sub Add (ChildTag As Tag) As Tag
+Public Sub add (ChildTag As Tag) As Tag
 	mChildren.Add(ChildTag)
 	ChildTag.Parent = Me
 	Return ChildTag
 End Sub
 
 'Add a Child and return current tag (parent)
-Public Sub Add2 (ChildTag As Tag) As Tag
+Public Sub add2 (ChildTag As Tag) As Tag
 	mChildren.Add(ChildTag)
 	ChildTag.Parent = Me
 	Return Me
 End Sub
 
 'Add a Child only (no tag)
-Public Sub Add3 (ChildTag As Tag)
+Public Sub add3 (ChildTag As Tag)
 	mChildren.Add(ChildTag)
 	ChildTag.Parent = Me
 End Sub
 
 'Add to Parent and return current tag (child)
-Public Sub AddTo (ParentTag As Tag) As Tag
+Public Sub addTo (ParentTag As Tag) As Tag
 	ParentTag.add(Me)
 	mParent = ParentTag
 	Return Me
 End Sub
 
 'Add to Parent and return the parent tag (parent)
-Public Sub AddTo2 (ParentTag As Tag) As Tag
+Public Sub addTo2 (ParentTag As Tag) As Tag
 	ParentTag.add(Me)
 	mParent = ParentTag
 	Return ParentTag
 End Sub
 
 'Add to Parent only (no tag)
-Public Sub AddTo3 (ParentTag As Tag)
+Public Sub addTo3 (ParentTag As Tag)
 	ParentTag.add(Me)
 	mParent = ParentTag
 End Sub
 
 'Add a Sibling and return the sibling tag (sibling)
-Public Sub AddSibling (siblingTag As Tag) As Tag
+Public Sub addSibling (siblingTag As Tag) As Tag
 	mSiblings.Add(siblingTag)
 	mParent.Add(siblingTag)
 	siblingTag.Parent = mParent
@@ -373,7 +372,7 @@ Public Sub AddSibling (siblingTag As Tag) As Tag
 End Sub
 
 'Add a Sibling and return parent tag (parent)
-Public Sub AddSibling2 (siblingTag As Tag) As Tag
+Public Sub addSibling2 (siblingTag As Tag) As Tag
 	mSiblings.Add(siblingTag)
 	mParent.Add(siblingTag)
 	siblingTag.Parent = mParent
@@ -381,14 +380,14 @@ Public Sub AddSibling2 (siblingTag As Tag) As Tag
 End Sub
 
 'Add a Sibling only (no tag)
-Public Sub AddSibling3 (siblingTag As Tag)
+Public Sub addSibling3 (siblingTag As Tag)
 	mSiblings.Add(siblingTag)
 	mParent.Add(siblingTag)
 	siblingTag.Parent = mParent
 End Sub
 
 'Add a Sibling and return the current tag (current)
-Public Sub AddSibling4 (siblingTag As Tag) As Tag
+Public Sub addSibling4 (siblingTag As Tag) As Tag
 	mSiblings.Add(siblingTag)
 	mParent.Add(siblingTag)
 	Return Me
@@ -396,17 +395,17 @@ End Sub
 
 'Same as add (child)
 Public Sub down (ChildTag As Tag) As Tag
-	Return Add(ChildTag)
+	Return add(ChildTag)
 End Sub
 
 'Same as add2 (parent)
 Public Sub down2 (ChildTag As Tag)
-	Add2(ChildTag)
+	add2(ChildTag)
 End Sub
 
 'Same as add3
 Public Sub down3 (ChildTag As Tag)
-	Add3(ChildTag)
+	add3(ChildTag)
 End Sub
 
 'same as addTo (child)
