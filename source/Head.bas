@@ -9,7 +9,7 @@ Private Sub Process_Globals
 	Private Const tagname As String = "head"
 End Sub
 
-Private Sub init As Tag
+Public Sub init As Tag
 	Return Html.create(tagname)
 End Sub
 

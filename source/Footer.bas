@@ -2,11 +2,11 @@
 Group=Modules
 ModulesStructureVersion=1
 Type=StaticCode
-Version=10
+Version=10.3
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "a"
+	Private Const tagname As String = "footer"
 End Sub
 
 Public Sub init As Tag
@@ -21,6 +21,11 @@ Public Sub attr2 (keyvals As Map) As Tag
 	Return init.attr2(keyvals)
 End Sub
 
+'Add a Child and return the added tag (child)
+Public Sub add (Child As Tag) As Tag
+	Return init.add(Child)
+End Sub
+
 '(same as AddTo)
 'Add to Parent and return current tag (child)
 Public Sub up (Parent As Tag) As Tag
@@ -33,19 +38,8 @@ End Sub
 
 'Set id attribute
 Public Sub id (value As String) As Tag
-	Return init.attr("id", value)
+	Return init.id(value)
 End Sub
-
-'Set href attribute
-Public Sub href (value As String) As Tag
-	Return init.hrefOf(value)
-End Sub
-
-'Set target attribute
-Public Sub target (value As String) As Tag
-	Return init.targetOf(value)
-End Sub
-
 
 'Add a class
 Public Sub cls (value As String) As Tag

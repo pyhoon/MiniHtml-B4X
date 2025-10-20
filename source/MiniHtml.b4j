@@ -5,52 +5,55 @@ Library1=jcore
 Library2=json
 Library3=b4xcollections
 Module1=Anchor
-Module10=Em
-Module11=Form
-Module12=H1
-Module13=H2
-Module14=H3
-Module15=H4
-Module16=H5
-Module17=H6
-Module18=Head
-Module19=Html
+Module10=Dropdown
+Module11=Em
+Module12=Footer
+Module13=Form
+Module14=H1
+Module15=H2
+Module16=H3
+Module17=H4
+Module18=H5
+Module19=H6
 Module2=Body
-Module20=HtmlTable
-Module21=Icon
-Module22=Img
-Module23=Input
-Module24=Italic
-Module25=Label
-Module26=Li
-Module27=Meta
-Module28=MiniHtmlParser
-Module29=Ol
+Module20=Head
+Module21=Html
+Module22=HtmlTable
+Module23=Icon
+Module24=Img
+Module25=Input
+Module26=Italic
+Module27=Label
+Module28=Li
+Module29=Meta
 Module3=Bold
-Module30=Option
-Module31=Paragraph
-Module32=Plain
-Module33=Span
-Module34=Strong
-Module35=Tag
-Module36=Tbody
-Module37=Td
-Module38=Textarea
-Module39=Tfoot
+Module30=MiniHtmlParser
+Module31=Nav
+Module32=Ol
+Module33=Option
+Module34=Paragraph
+Module35=Plain
+Module36=Span
+Module37=Strong
+Module38=Tag
+Module39=Tbody
 Module4=Br
-Module40=Th
-Module41=Thead
-Module42=Tr
-Module43=Ul
-Module44=Underline
+Module40=Td
+Module41=Textarea
+Module42=Tfoot
+Module43=Th
+Module44=Thead
+Module45=Tr
+Module46=Ul
+Module47=Underline
 Module5=Button
-Module6=Del
-Module7=Div
-Module8=Document
-Module9=Dropdown
+Module6=Caption
+Module7=Del
+Module8=Div
+Module9=Document
 NumberOfFiles=0
 NumberOfLibraries=3
-NumberOfModules=44
+NumberOfModules=47
 Version=10.3
 @EndOfDesignText@
 #Region Project Attributes
@@ -59,7 +62,7 @@ Version=10.3
 #End Region
 #Region Macros
 '#Macro: Title, Export as zip, ide://run?file=%B4X%\Zipper.jar&Args=%PROJECT_NAME%.zip
-#Macro: Title, Update Version, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%&Args=%PROJECT%&Args=Version&Args=0.30
+#Macro: Title, Update Version, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%&Args=%PROJECT%&Args=Version&Args=0.40
 #Macro: Title, Create B4xLib, ide://run?file=%JAVABIN%\jar.exe&WorkingDirectory=..&args=-cMf&args=..\release\%PROJECT_NAME%.b4xlib&args=Snippets&args=*.bas&args=manifest.txt&args=LICENSE
 #Macro: Title, Release folder, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\release
 #Macro: Title, Copy to AddLibs, ide://run?file=%COMSPEC%&args=/c&args=copy&args=%PROJECT%\..\release\*.b4xlib&args=%ADDITIONAL%\..\B4X

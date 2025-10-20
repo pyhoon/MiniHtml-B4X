@@ -669,6 +669,24 @@ Public Sub srcOf (value As String) As Tag
 	Return Me
 End Sub
 
+'Set target attribute
+Public Sub targetOf (value As String) As Tag
+	mAttributes.Put("target", value)
+	Return Me	
+End Sub
+
+'Set width attribute
+Public Sub width (value As String) As Tag
+	mAttributes.Put("width", value)
+	Return Me
+End Sub
+
+'Set height attribute
+Public Sub height (value As String) As Tag
+	mAttributes.Put("height", value)
+	Return Me
+End Sub
+
 'Add link tag with only href
 Public Sub link (href As String) As Tag
 	Return addLink(href, "", "", "")
@@ -682,6 +700,13 @@ End Sub
 'Add link with rel="stylesheet"
 Public Sub linkCss (href As String) As Tag
 	Return addLink(href, "stylesheet", "", "")
+End Sub
+
+'Add link with rel="icon"
+Public Sub linkIcon (linktype As String, href As String) As Tag
+	Dim keyvals As Map = CreateMap("rel": "icon", "href": href)
+	If linktype <> "" Then keyvals.Put("type", linktype)
+	Return addLink2(keyvals)
 End Sub
 
 'Add a class
