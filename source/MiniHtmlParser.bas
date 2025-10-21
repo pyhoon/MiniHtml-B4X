@@ -9,6 +9,7 @@ Sub Class_Globals
 	Public EscapedEntitiesMap As Map
 	Private mIndex As Int
 	Private mHtml As String
+	Private mShowParserLogs As Boolean
 	Private WhiteSpace As String = " " & TAB & Chr(10) & Chr(13)
 	Private VoidTags As B4XSet
 	Private Const COLOR_ORANGE As Int = -29696
@@ -24,6 +25,10 @@ Public Sub Initialize
 		"embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"))
 	EscapedEntitiesMap = CreateMap("quot": $"""$, "amp": "&", "apos": "'", "lt": "<", "gt": ">", _
 		"nbsp": " ")
+End Sub
+
+Public Sub setShowParserLogs (value As Boolean)
+	mShowParserLogs = value
 End Sub
 
 Public Sub Parse (HtmlText As String) As HtmlNode
@@ -232,7 +237,9 @@ Public Sub PrintNode (node As HtmlNode)
 End Sub
 
 Private Sub PrintNodeHelper (node As HtmlNode, Indent As String)
-	LogColor($"${Indent}*** ${node.Name} ***"$, COLOR_ORANGE)
+	If mShowParserLogs Then
+		LogColor($"${Indent}*** ${node.Name} ***"$, COLOR_ORANGE)
+	End If
 	For Each attribute As HtmlAttribute In node.Attributes
 		Log($"${Indent}${attribute.Key}: "${attribute.Value}""$)
 	Next
@@ -333,12 +340,16 @@ Public Sub ConvertToTag (node1 As HtmlNode) As Tag
 		If att.Key <> "class" And att.Key <> "style" Then ' find other attributes
 			If att.Key = "value" And att.Value.Trim.Length > 0 Then
 				If node1.Name = "input" Then ' has value key
-					LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
+					If mShowParserLogs Then
+						LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
+					End If
 					parent.attr(att.Key, att.Value.Trim)
 				Else
 					' ignore empty values (experimental)
 					If att.Value.Trim.Length > 0 Then
-						LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
+						If mShowParserLogs Then
+							LogColor($"${att.Key}=${att.Value}"$, COLOR_ORANGE)
+						End If
 						parent.Text(att.Value.Trim) ' value
 					End If
 				End If
@@ -351,9 +362,14 @@ Public Sub ConvertToTag (node1 As HtmlNode) As Tag
 		Dim tag2 As Tag = ConvertToTag(child)
 		If tag2.TagName = "text" Then
 			If tag2.Attributes.ContainsKey("value") Then
-				LogColor(tag2.Build & "         ** ignored **", COLOR_RED) ' ignore this
+				If mShowParserLogs Then
+					LogColor(tag2.Build & "         ** ignored **", COLOR_RED) ' ignore this
+				End If
 			Else
-				LogColor(tag2.Build & "         " & tag2.Attributes, COLOR_BLUE) ' Text
+				If mShowParserLogs Then
+					LogColor(tag2.Build, COLOR_BLUE) ' Text
+					'LogColor(tag2.Build & "         " & tag2.Attributes.As(JSON).ToCompactString, COLOR_BLUE) ' Text
+				End If
 				parent.add(tag2)
 			End If
 		Else

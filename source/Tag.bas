@@ -44,7 +44,7 @@ Public Sub Initialize (tagName As String) As Tag
 			mMode = mMultiline
 		Case "meta", "input"
 			mMode = mMeta
-		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "a", "i", "b", "u", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td", "small"
+		Case "title", "h1", "h2", "h3", "h4", "h5", "script", "label", "button", "span", "li", "a", "i", "b", "u", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td", "small", "textarea"
 			mMode = mUniline
 		Case "img", "link", "br"
 			mMode = mLink
@@ -107,10 +107,14 @@ Public Sub Build3 (indent As Int, Line1CRLF As Boolean) As String
 		If tagOrString Is Tag Then
 			Dim mCurrent As Tag = tagOrString
 			Select mCurrent.TagName
-				Case "span", "strong", "small", "em", "b", "u"
+				Case "span", "strong", "small", "em", "b", "u", "textarea"
 					SB.Append(mCurrent.build) ' stay on same line
 				Case Else
-					SB.Append(mCurrent.build3(indent + 1, True))
+					If mTagName = "textarea" Then
+						SB.Append(mCurrent.build)
+					Else
+						SB.Append(mCurrent.build3(indent + 1, True))
+					End If
 			End Select
 		Else
 			SB.Append(tagOrString)
@@ -410,32 +414,32 @@ End Sub
 
 'same as addTo (child)
 Public Sub up (ParentTag As Tag) As Tag
-	Return AddTo(ParentTag)
+	Return addTo(ParentTag)
 End Sub
 
 'same as addTo2 (parent)
 Public Sub up2 (ParentTag As Tag) As Tag
-	Return AddTo2(ParentTag)
+	Return addTo2(ParentTag)
 End Sub
 
 'same as addTo3 (no tag)
 Public Sub up3 (ParentTag As Tag)
-	AddTo3(ParentTag)
+	addTo3(ParentTag)
 End Sub
 
 'Add a Sibling and return the sibling tag (sibling)
 Public Sub sib (siblingTag As Tag) As Tag
-	Return AddSibling(siblingTag)
+	Return addSibling(siblingTag)
 End Sub
 
 'Add a Sibling and return parent tag (parent)
 Public Sub sib2 (siblingTag As Tag) As Tag
-	Return AddSibling2(siblingTag)
+	Return addSibling2(siblingTag)
 End Sub
 
 'Add a Sibling only (no tag)
 Public Sub sib3 (siblingTag As Tag)
-	AddSibling3(siblingTag)
+	addSibling3(siblingTag)
 End Sub
 
 'Add a Sibling and return the current tag (current)
