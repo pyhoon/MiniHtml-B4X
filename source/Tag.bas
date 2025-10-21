@@ -147,13 +147,25 @@ Public Sub setTagName (tagName As String) As Tag
 	Return Me
 End Sub
 
+' Get child by index
 Public Sub Child (tagIndex As Int) As Tag
 	Return mChildren.Get(tagIndex)
 End Sub
 
+' Get child matches id attribute
 Public Sub ChildById (value As String) As Tag
 	For i = 0 To mChildren.Size - 1
 		If Child(i).mAttributes.Get("id") = value Then
+			Return Child(i)
+		End If
+	Next
+	Return Null
+End Sub
+
+' Get first child matches Tag Name
+Public Sub ChildByTagName (value As String) As Tag
+	For i = 0 To mChildren.Size - 1
+		If Child(i).TagName = value Then
 			Return Child(i)
 		End If
 	Next
@@ -646,6 +658,18 @@ End Sub
 Public Sub name (value As String) As Tag
 	mName = value
 	mAttributes.Put("name", mName)
+	Return Me
+End Sub
+
+'Set data- attribute
+Public Sub data (key As String, value As Object) As Tag
+	mAttributes.Put("data-" & key, value)
+	Return Me
+End Sub
+
+'Set aria- attribute
+Public Sub aria (key As String, value As Object) As Tag
+	mAttributes.Put("aria-" & key, value)
 	Return Me
 End Sub
 
