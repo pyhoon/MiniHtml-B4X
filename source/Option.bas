@@ -41,6 +41,11 @@ Public Sub id (value As String) As Tag
 	Return init.attr("id", value)
 End Sub
 
+'Set value attribute
+Public Sub valueOf (value As String) As Tag
+	Return init.attr("value", value)
+End Sub
+
 'Add a class
 Public Sub cls (value As String) As Tag
 	Return init.cls(value)
