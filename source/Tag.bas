@@ -456,7 +456,7 @@ End Sub
 
 'Add a Sibling and return the current tag (current)
 Public Sub sib4 (siblingTag As Tag) As Tag
-	Return AddSibling4(siblingTag)
+	Return addSibling4(siblingTag)
 End Sub
 
 'Replace/return maps of attributes
@@ -677,6 +677,12 @@ End Sub
 Public Sub action (value As String) As Tag
 	mAttributes.Put("action", value)
 	Return Me
+End Sub
+
+'Set value attribute
+Public Sub valueOf (value As String) As Tag
+	mAttributes.Put("value", value)
+	Return Me	
 End Sub
 
 'Set type attribute
