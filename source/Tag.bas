@@ -296,6 +296,13 @@ Public Sub script3 (src As String, integrity As String, crossorigin As String) A
 	Return script2(keyvals)
 End Sub
 
+' Wrap script inside script tags
+'output: <code><script>value</script></code>
+Public Sub script4 (value As String) As Tag
+	mChildren.Add(Html.create("script").multiline.text(value))
+	Return Me
+End Sub
+
 'Public Sub style (value As String) As Tag
 '	mChildren.Add(Html.create("style").Text(value))
 '	Return Me
@@ -691,6 +698,12 @@ Public Sub typeOf (value As String) As Tag
 	Return Me
 End Sub
 
+'Set form attribute
+Public Sub formOf (value As String) As Tag
+	mAttributes.Put("form", value)
+	Return Me
+End Sub
+
 'Set href attribute
 Public Sub hrefOf (value As String) As Tag
 	mAttributes.Put("href", value)
@@ -860,5 +873,11 @@ End Sub
 
 Public Sub hxSwapOob (value As String) As Tag
 	mAttributes.Put("hx-swap-oob", value)
+	Return Me
+End Sub
+
+'e.g <code>hxOn(":after-request", statement)</code>
+Public Sub hxOn (event As String, value As String) As Tag
+	mAttributes.Put("hx-on:" & event, value)
 	Return Me
 End Sub
