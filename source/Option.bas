@@ -21,6 +21,10 @@ Public Sub attr2 (keyvals As Map) As Tag
 	Return init.attr2(keyvals)
 End Sub
 
+Public Sub attr3 (key As String) As Tag
+	Return init.attr3(key)
+End Sub
+
 'Add a Child and return the added tag (child)
 Public Sub add (Child As Tag) As Tag
 	Return init.add(Child)

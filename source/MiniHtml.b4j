@@ -1,9 +1,9 @@
 ﻿AppType=StandardJava
 Build1=Default,b4j.example
 Group=App
-Library1=jcore
-Library2=json
-Library3=b4xcollections
+Library1=b4xcollections
+Library2=jcore
+Library3=json
 Module1=Anchor
 Module10=Dropdown
 Module11=Em
