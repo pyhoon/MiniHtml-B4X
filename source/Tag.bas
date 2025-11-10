@@ -6,7 +6,7 @@ Version=4.5
 @EndOfDesignText@
 ' Created by: Aeric
 ' Credit to:  EnriqueGonzalez
-' Version: 0.50
+' Version: 0.60
 Sub Class_Globals
 	Private mId As String
 	Private mName As String
@@ -256,17 +256,11 @@ Public Sub text (value As String) As Tag
 End Sub
 
 ' Remove all children and overwrite inner text
-Public Sub text2 (value As String)
+Public Sub text2 (value As String) As Tag
 	mChildren.Clear
 	mChildren.Add(value)
-	'Return Me
+	Return Me
 End Sub
-
-'Public Sub get As String
-'	Dim it As String
-'	If mChildren.Size = 1 Then it = mChildren.Get(0)
-'	Return it
-'End Sub
 
 ' Seem unused, set to Private before remove
 Private Sub TextNextLine (value As String) As Tag 'ignore
