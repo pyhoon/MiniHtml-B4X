@@ -63,14 +63,18 @@ Version=10.3
 #End Region
 #Region Macros
 '#Macro: Title, Export as zip, ide://run?file=%B4X%\Zipper.jar&Args=%PROJECT_NAME%.zip
-#Macro: Title, Update Version, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%&Args=%PROJECT%&Args=Version&Args=0.40
+#Macro: Title, Update Version, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%&Args=%PROJECT%&Args=Version&Args=0.50
 #Macro: Title, Create B4xLib, ide://run?file=%JAVABIN%\jar.exe&WorkingDirectory=..&args=-cMf&args=..\prerelease\%PROJECT_NAME%.b4xlib&args=Snippets&args=*.bas&args=manifest.txt&args=LICENSE
 #Macro: Title, Prerelease folder, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\prerelease
 #Macro: Title, Copy to AddLibs, ide://run?file=%COMSPEC%&args=/c&args=copy&args=%PROJECT%\..\prerelease\*.b4xlib&args=%ADDITIONAL%\..\B4X
 #End Region
 Sub Process_Globals
 	Private HtmlParser As MiniHtmlParser
-	Private Const BLUE As Int = -16776961 'ignore
+	Public Const COLOR_ORANGE 	As Int = -29696
+	Public Const COLOR_MAGENTA 	As Int = -65281
+	Public Const COLOR_RED 		As Int = -65536
+	Public Const COLOR_BLUE 	As Int = -16776961
+	'Public Const COLOR_BLACK 	As Int = 0	
 End Sub
 
 Sub AppStart (Args() As String)
@@ -84,59 +88,79 @@ Sub AppStart (Args() As String)
 	'StartMessageLoop
 End Sub
 
-'Public Sub Test
-'	Dim s As String = $"<form action="" method="post">
-'    <label for="username">Username:</label><br>
-'    <input type="text" id="username" name="username" class="c11 c12 c13" style="s11:v11; s12:v12;" required><br>
-'    <br>
-'    <label for="country">Country:</label><br>
-'    <select id="country" name="country" class="c21 c22 c23" style="s21: v21; s22: v22">
-'        <option disabled>Select a country</option>
-'        <option value="malaysia">Malaysia</option>
-'        <option value="other">Other</option>
-'    </select><br>
-'    <br>
-'    <input type="submit" value="Submit">
-'</form>"$
-'	File.WriteString(File.DirApp, "index.html", s)
-'	HtmlParser.Initialize
-'	Dim root As HtmlNode = HtmlParser.Parse(s)
-'	If root.IsInitialized Then
-'		Dim root1 As HtmlNode = root.Children.Get(0)
-'		Log($"root: ${root1.name}"$)
-'		For Each attr As HtmlAttribute In root1.Attributes
-'			Log($"${attr.Key} = ${attr.Value}"$)
-'		Next
-'		For Each child As HtmlNode In root1.Children
-'			Log($"  child: ${child.name}"$)
-'			For Each attr1 As HtmlAttribute In child.Attributes
-'				If attr1.Key = attr1.Value Then
-'					LogColor($"  ${attr1.Key} = ${attr1.Value}"$, -65536)
-'				Else
-'					Log($"  ${attr1.Key} = ${attr1.Value}"$)
-'				End If
-'			Next
-'			For Each grandchild As HtmlNode In child.Children
-'				LogColor($"    child: ${grandchild.name}"$, -16776961)
-'				For Each attr2 As HtmlAttribute In grandchild.Attributes
-'					If attr2.Key = attr2.Value Then
-'						LogColor($"    ${attr2.Key} = ${attr2.Value}"$, -65536)
-'					Else
-'						LogColor($"    ${attr2.Key} = ${attr2.Value}"$, -16776961)
-'					End If
-'				Next
-'				For Each grand2child As HtmlNode In grandchild.Children
-'					LogColor($"      child: ${grand2child.name}"$, -65281)
-'					For Each attr3 As HtmlAttribute In grand2child.Attributes
-'						LogColor($"      ${attr3.Key} = ${attr3.Value}"$, -65281)
-'					Next
-'				Next
-'			Next
-'		Next
-'	End If
-'End Sub
+Public Sub Test
+	Dim s As String = $"<form action="" method="post">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" class="c11 c12 c13" style="s11:v11; s12:v12;" required><br>
+    <br>
+    <label for="country">Country:</label><br>
+    <select id="country" name="country" class="c21 c22 c23" style="s21: v21; s22: v22">
+        <option disabled>Select a country</option>
+        <option value="malaysia">Malaysia</option>
+        <option value="other">Other</option>
+    </select><br>
+    <br>
+    <input type="submit" value="Submit">
+</form>"$
+	File.WriteString(File.DirApp, "index.html", s)
+	HtmlParser.Initialize
+	Dim root As HtmlNode = HtmlParser.Parse(s)
+	If root.IsInitialized Then
+		Dim root1 As HtmlNode = root.Children.Get(0)
+		Log($"root: ${root1.name}"$)
+		For Each attr As HtmlAttribute In root1.Attributes
+			Log($"${attr.Key} = ${attr.Value}"$)
+		Next
+		For Each child As HtmlNode In root1.Children
+			Log($"  child: ${child.name}"$)
+			For Each attr1 As HtmlAttribute In child.Attributes
+				If attr1.Key = attr1.Value Then
+					LogColor($"  ${attr1.Key} = ${attr1.Value}"$, COLOR_RED)
+				Else
+					Log($"  ${attr1.Key} = ${attr1.Value}"$)
+				End If
+			Next
+			For Each grandchild As HtmlNode In child.Children
+				LogColor($"    child: ${grandchild.name}"$, COLOR_BLUE)
+				For Each attr2 As HtmlAttribute In grandchild.Attributes
+					If attr2.Key = attr2.Value Then
+						LogColor($"    ${attr2.Key} = ${attr2.Value}"$, COLOR_RED)
+					Else
+						LogColor($"    ${attr2.Key} = ${attr2.Value}"$, COLOR_BLUE)
+					End If
+				Next
+				For Each grand2child As HtmlNode In grandchild.Children
+					LogColor($"      child: ${grand2child.name}"$, COLOR_MAGENTA)
+					For Each attr3 As HtmlAttribute In grand2child.Attributes
+						LogColor($"      ${attr3.Key} = ${attr3.Value}"$, COLOR_MAGENTA)
+					Next
+				Next
+			Next
+		Next
+	End If
+End Sub
 
-Sub GenerateHtml As String
+Public Sub Test2
+		Dim s As String = $"<form action="" method="post">
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" class="c11 c12 c13" style="s11:v11; s12:v12;" required><br>
+    <br>
+    <label for="country">Country:</label><br>
+    <select id="country" name="country" class="c21 c22 c23" style="s21: v21; s22: v22">
+        <option disabled>Select a country</option>
+        <option value="malaysia">Malaysia</option>
+        <option value="other">Other</option>
+    </select><br>
+    <br>
+    <input type="submit" value="Submit">
+</form>"$
+	File.WriteString(File.DirApp, "index.html", s)
+	HtmlParser.Initialize
+	Dim root2 As Tag = Html.Parse(s)
+	Log(root2.Build)
+End Sub
+
+Sub GenerateHtml As String 'ignore
 	Dim html1 As Tag = Html.lang("en")
 	html1.comment(" generated by MiniHTML ")
 	Head.up(html1).responsive _
@@ -190,10 +214,7 @@ Sub GenerateHtml As String
           <small class="text-body-secondary">By clicking Sign up, you agree to the terms of use.</small>
         </form>"$
 
-	Dim root As HtmlNode = HtmlParser.Parse(loginForm)
-	If root.IsInitialized Then
-		Dim newTag As Tag = HtmlParser.ConvertToTag(root.Children.Get(0))
-		Div.up(row1).cls("col-lg-5 col-md-10 mx-auto").add(newTag)
-	End If	
+	Dim newTag As Tag = Html.Parse(loginForm)
+	Div.up(row1).cls("col-lg-5 col-md-10 mx-auto").add(newTag)
 	Return html1.build
 End Sub
