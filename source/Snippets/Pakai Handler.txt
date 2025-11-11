@@ -21,7 +21,7 @@ Sub Handle (req As ServletRequest, resp As ServletResponse)
 	Else If path.StartsWith("/api/$plural$/delete/") Then
 		HandleDeleteModal
 	Else
-		Handle$Plural2$
+		Handle$Model$
 	End If
 End Sub
 
@@ -46,7 +46,7 @@ Private Sub ContentContainer As Tag
 	
 	Dim row1 As Tag = Div.cls("row").up(form1)
 	Dim col2 As Tag = Div.cls("col-md-6 col-lg-6 text-start").up(row1)
-	H3.cls("text-uppercase").text("$TITLE$").up(col2)
+	H3.cls("text-uppercase").text("Title").up(col2)
 	
 	Dim div1 As Tag = Div.cls("col-md-6 col-lg-6").up(row1)
 	Dim div2 As Tag = Div.cls("text-end mt-2").up(div1)
@@ -65,7 +65,7 @@ Private Sub ContentContainer As Tag
 	button2.data("bs-toggle", "modal")
 	button2.data("bs-target", "#modal-container")
 	button2.add(Icon.cls("bi bi-plus-lg me-2"))
-	button2.text("Add $Singular2$")
+	button2.text("Add $Model$")
 
 	Dim container1 As Tag = Div.up(col1)
 	container1.id("$plural$-container")
@@ -104,7 +104,7 @@ End Sub
 
 ' Return table HTML
 Private Sub HandleTable
-	App.WriteHtml(Response, Create$Plural2$Table.Build)
+	App.WriteHtml(Response, Create$Model$Table.Build)
 End Sub
 
 ' Add modal
@@ -115,7 +115,7 @@ Private Sub HandleAddModal
 	form1.hxSwap("innerHTML")
 	
 	Dim modalHeader As Tag = Div.cls("modal-header").up(form1)
-	H5.cls("modal-title").text("Add $Singular2$").up(modalHeader)
+	H5.cls("modal-title").text("Add $Model$").up(modalHeader)
 	Button.typeOf("button").cls("btn-close").data("bs-dismiss", "modal").up(modalHeader)
 
 	Dim modalBody As Tag = Div.cls("modal-body").up(form1)
@@ -149,7 +149,7 @@ Private Sub HandleEditModal
 		Dim name As String = DB.First.Get("name")
 
 		Dim modalHeader As Tag = Div.cls("modal-header").up(form1)
-		H5.cls("modal-title").text("Edit $Singular2$").up(modalHeader)
+		H5.cls("modal-title").text("Edit $Model$").up(modalHeader)
 		Button.typeOf("button").cls("btn-close").data("bs-dismiss", "modal").up(modalHeader)
 		
 		Dim modalBody As Tag = Div.cls("modal-body").up(form1)
@@ -186,7 +186,7 @@ Private Sub HandleDeleteModal
 		Dim name As String = DB.First.Get("name")
 
 		Dim modalHeader As Tag = Div.cls("modal-header").up(form1)
-		H5.cls("modal-title").text("Delete $Singular2$").up(modalHeader)
+		H5.cls("modal-title").text("Delete $Model$").up(modalHeader)
 		Button.typeOf("button").cls("btn-close").data("bs-dismiss", "modal").up(modalHeader)
 		
 		Dim modalBody As Tag = Div.cls("modal-body").up(form1)
@@ -204,13 +204,13 @@ Private Sub HandleDeleteModal
 End Sub
 
 ' Handle CRUD operations
-Private Sub Handle$Plural2$
+Private Sub Handle$Model$
 	Select Method
 		Case "POST"
 			' Create
 			Dim name As String = Request.GetParameter("name")
 			If name = "" Or name.Trim.Length < 2 Then
-				ShowAlert("$Singular2$ name must be at least 2 characters long.", "warning")
+				ShowAlert("$Model$ name must be at least 2 characters long.", "warning")
 				Return
 			End If
 			Try
@@ -221,7 +221,7 @@ Private Sub Handle$Plural2$
 				DB.Query
 				If DB.Found Then
 					DB.Close
-					ShowAlert("$Singular2$ already exists!", "warning")
+					ShowAlert("$Model$ already exists!", "warning")
 					Return
 				End If
 			Catch
@@ -236,7 +236,7 @@ Private Sub Handle$Plural2$
 				DB.Parameters = Array(name, Main.CurrentDateTime)
 				DB.Save
 				DB.Close
-				ShowToast("$Singular2$", "created", "$Singular2$ created successfully!", "success")
+				ShowToast("$Model$", "created", "$Model$ created successfully!", "success")
 			Catch
 				ShowAlert($"Database error: ${LastException.Message}"$, "danger")
 			End Try
@@ -249,7 +249,7 @@ Private Sub Handle$Plural2$
 			
 			DB.Find(id)
 			If DB.Found = False Then
-				ShowAlert("$Singular2$ not found!", "warning")
+				ShowAlert("$Model$ not found!", "warning")
 				DB.Close
 				Return
 			End If
@@ -259,7 +259,7 @@ Private Sub Handle$Plural2$
 			DB.Parameters = Array(name, id)
 			DB.Query
 			If DB.Found Then
-				ShowAlert("$Singular2$ already exists!", "warning")
+				ShowAlert("$Model$ already exists!", "warning")
 				DB.Close
 				Return
 			End If
@@ -272,7 +272,7 @@ Private Sub Handle$Plural2$
 				DB.Id = id
 				DB.Save
 				DB.Close
-				ShowToast("$Singular2$", "updated", "$Singular2$ updated successfully!", "info")
+				ShowToast("$Model$", "updated", "$Model$ updated successfully!", "info")
 			Catch
 				ShowAlert($"Database error: ${LastException.Message}"$, "danger")
 			End Try
@@ -284,16 +284,16 @@ Private Sub Handle$Plural2$
 			
 			DB.Find(id)
 			If DB.Found = False Then
-				ShowAlert("$Singular2$ not found!", "warning")
+				ShowAlert("$Model$ not found!", "warning")
 				DB.Close
 				Return
 			End If
 			
-			DB.Table = "$dbtable$"
+			DB.Table = "dbtable2" ' child table
 			DB.WhereParam("$singular$_id = ?", id)
 			DB.Query
 			If DB.Found Then
-				ShowAlert("Cannot delete $singular$ with associated products!", "warning")
+				ShowAlert("Cannot delete $singular$ with associated rows!", "warning")
 				DB.Close
 				Return
 			End If
@@ -304,14 +304,14 @@ Private Sub Handle$Plural2$
 				DB.Id = id
 				DB.Delete
 				DB.Close
-				ShowToast("$Singular2$", "deleted", "$Singular2$ deleted successfully!", "danger")
+				ShowToast("$Model$", "deleted", "$Model$ deleted successfully!", "danger")
 			Catch
 				ShowAlert($"Database error: ${LastException.Message}"$, "danger")
 			End Try
 	End Select
 End Sub
 
-Private Sub Create$Plural2$Table As Tag
+Private Sub Create$Model$Table As Tag
 	Dim table1 As Tag = HtmlTable.cls("table table-bordered table-hover rounded small")
 	Dim thead1 As Tag = Thead.cls("table-light").up(table1)
 	thead1.add(Th.sty("text-align: right; width: 50px").text("#"))
@@ -325,14 +325,14 @@ Private Sub Create$Plural2$Table As Tag
 	DB.OrderBy = CreateMap("id": "")
 	DB.Query
 	For Each row As Map In DB.Results
-		Dim tr1 As Tag = Create$Plural2$Row(row)
+		Dim tr1 As Tag = Create$Model$Row(row)
 		tr1.up(tbody1)
 	Next
 	DB.Close
 	Return table1
 End Sub
 
-Private Sub Create$Plural2$Row (data As Map) As Tag
+Private Sub Create$Model$Row (data As Map) As Tag
 	Dim id As Int = data.Get("id")
 	Dim name As String = data.Get("name")
 
@@ -371,7 +371,7 @@ End Sub
 Private Sub ShowToast (entity As String, action As String, message As String, status As String)
 	Dim div1 As Tag = Div.id("$plural$-container")
 	div1.hxSwapOob("true")
-	div1.add(Create$Plural2$Table)
+	div1.add(Create$Model$Table)
 
 	Dim script1 As MiniJs
 	script1.Initialize
