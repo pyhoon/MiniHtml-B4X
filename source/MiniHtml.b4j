@@ -74,60 +74,20 @@ Sub Process_Globals
 	Public Const COLOR_MAGENTA 	As Int = -65281
 	Public Const COLOR_RED 		As Int = -65536
 	Public Const COLOR_BLUE 	As Int = -16776961
+	Public context 				As Map
 End Sub
 
 Sub AppStart (Args() As String)
 	HtmlParser.Initialize
+	context.Initialize
 	Dim doc As Document
 	doc.Initialize
 	doc.AppendDocType
-	Test4
+	Test5
+	Test6
 	'doc.Append(GenerateHtml)
 	'File.WriteString(File.DirApp, "index.html", doc.ToString)
 	'StartMessageLoop
-End Sub
-
-Private Sub Test3
-	Dim D1 As Tag = Div.cls("test")
-	'Dim PT As Tag = Paragraph.init
-	Dim PT As Tag = Paragraph.init '.up(D1)
-	D1.PrintMe
-	
-	'Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
-	'Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
-	
-	'Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
-	'Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
-	
-	Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
-	Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
-	'P1.PrintMe
-	'P2.PrintMe
-	D1.PrintMe
-	PT.PrintMe
-End Sub
-
-Private Sub Test4
-	Dim Temp As Tag = Paragraph.init ' <p></p>
-	Dim M1 As Map = CreateMap("Temp": Temp)
-
-	Dim D1 As Tag = Div.init
-	
-	Dim P1 As Tag = M1.Get("Temp")
-	Dim P1 As Tag = M1.Get("Temp").As(Tag).Clone
-	P1.text("Demo 1").up(D1)
-	
-	Dim P2 As Tag = M1.Get("Temp")
-	Dim P2 As Tag = M1.Get("Temp").As(Tag).Clone
-	P2.text("Demo 2").up(D1)
-	
-	Dim PT2 As Tag = M1.Get("Temp")
-	Log(PT2.Build)
-	
-	' Log 1 (without Clone) : <p>Demo 1Demo 2
-	' </p>
-	
-	' Log 2 (with Clone)    : <p></p>
 End Sub
 
 Public Sub Test
@@ -200,6 +160,177 @@ Public Sub Test2
 	HtmlParser.Initialize
 	Dim root2 As Tag = Html.Parse(s)
 	Log(root2.Build)
+End Sub
+
+Private Sub Test3
+	Dim D1 As Tag = Div.cls("test")
+	'Dim PT As Tag = Paragraph.init
+	Dim PT As Tag = Paragraph.init '.up(D1)
+	D1.PrintMe
+	
+	'Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
+	'Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
+	
+	'Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
+	'Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
+	
+	Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
+	Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
+	'P1.PrintMe
+	'P2.PrintMe
+	D1.PrintMe
+	PT.PrintMe
+End Sub
+
+Private Sub Test4
+	Dim Temp As Tag = Paragraph.init ' <p></p>
+	Dim M1 As Map = CreateMap("Temp": Temp)
+
+	Dim D1 As Tag = Div.init
+	
+	Dim P1 As Tag = M1.Get("Temp")
+	Dim P1 As Tag = M1.Get("Temp").As(Tag).Clone
+	P1.text("Demo 1").up(D1)
+	
+	Dim P2 As Tag = M1.Get("Temp")
+	Dim P2 As Tag = M1.Get("Temp").As(Tag).Clone
+	P2.text("Demo 2").up(D1)
+	
+	Dim PT2 As Tag = M1.Get("Temp")
+	Log(PT2.Build)
+	
+	' Log 1 (without Clone) : <p>Demo 1Demo 2
+	' </p>
+	
+	' Log 2 (with Clone)    : <p></p>
+End Sub
+
+Private Sub Test5
+	' Create a dummy data
+	Dim rows As List
+	rows.Initialize
+	rows.Add(CreateMap("id": 1, "code": "T001", "name": "Teddy Bear"))
+	rows.Add(CreateMap("id": 2, "code": "H001", "name": "Hammer"))
+	rows.Add(CreateMap("id": 3, "code": "T002", "name": "Optimus Prime"))
+	
+	' Create a tbody tag
+	Dim tbody1 As Tag = Tbody.init
+
+	For Each row As Map In rows
+		Dim tr1 As Tag = CreateProductsRow(row)
+		tr1.up(tbody1)
+	Next
+	
+	Log($"	====================================
+				Test 5
+	===================================="$)
+	Log(tbody1.Build)
+End Sub
+
+Private Sub CreateProductsRowTemplate As Tag
+	Dim tr1 As Tag = Tr.init
+	tr1.add(Td.cls("align-middle").sty("text-align: right"))
+	tr1.add(Td.cls("align-middle"))
+	tr1.add(Td.cls("align-middle"))
+	Dim td3 As Tag = Td.cls("align-middle text-center px-1 py-1").up(tr1)
+
+	Dim anchor1 As Tag = Anchor.cls("edit text-primary mx-2").up(td3)
+	anchor1.hxGet("")
+	anchor1.hxTarget("#modal-content")
+	anchor1.hxTrigger("click")
+	anchor1.data("bs-toggle", "modal")
+	anchor1.data("bs-target", "#modal-container")
+	anchor1.add(Icon.cls("bi bi-pencil"))
+	anchor1.attr("title", "Edit")
+
+	Dim anchor2 As Tag = Anchor.cls("delete text-danger mx-2").up(td3)
+	anchor2.hxGet("")
+	anchor2.hxTarget("#modal-content")
+	anchor2.hxTrigger("click")
+	anchor2.data("bs-toggle", "modal")
+	anchor2.data("bs-target", "#modal-container")
+	anchor2.add(Icon.cls("bi bi-trash3"))
+	anchor2.attr("title", "Delete")
+	
+	Return tr1
+End Sub
+
+Private Sub CreateProductsRow (data As Map) As Tag
+	Dim id As Int = data.Get("id")
+	Dim code As String = data.Get("code")
+	Dim name As String = data.Get("name")
+	
+	' Generate the row tag and store for reuse
+	If context.ContainsKey("row") = False Then
+		context.Put("row", CreateProductsRowTemplate)
+	End If
+
+	' Retrieve the tag
+	Dim row1 As Tag = context.Get("row")
+	
+	' Update tag with new data
+	row1.Child(0).text2(id)
+	row1.Child(1).text2(code)
+	row1.Child(2).text2(name)
+	
+	Dim td3 As Tag = row1.Child(3)
+	
+	Dim anchor1 As Tag = td3.Child(0)
+	anchor1.hxGet($"/api/products/edit/${id}"$)
+	
+	Dim anchor2 As Tag = td3.Child(1)
+	anchor2.hxGet($"/api/products/delete/${id}"$)
+
+	Return row1
+End Sub
+
+Private Sub Test6
+	' Create a dummy data
+	Dim rows As List
+	rows.Initialize
+	rows.Add(CreateMap("id": 1, "code": "T001", "name": "Teddy Bear"))
+	rows.Add(CreateMap("id": 2, "code": "H001", "name": "Hammer"))
+	rows.Add(CreateMap("id": 3, "code": "T002", "name": "Optimus Prime"))
+	
+	' Create a tbody tag
+	Dim tbody1 As Tag = Tbody.init
+
+	For Each data As Map In rows
+		Dim id As Int = data.Get("id")
+		Dim code As String = data.Get("code")
+		Dim name As String = data.Get("name")
+		
+		Dim tr1 As Tag = Tr.init
+		tr1.add(Td.cls("align-middle").sty("text-align: right")).text(id)
+		tr1.add(Td.cls("align-middle")).text(code)
+		tr1.add(Td.cls("align-middle")).text(name)
+		Dim td3 As Tag = Td.cls("align-middle text-center px-1 py-1").up(tr1)
+		
+		Dim anchor1 As Tag = Anchor.cls("edit text-primary mx-2").up(td3)
+		anchor1.hxGet($"/api/products/edit/${id}"$)
+		anchor1.hxTarget("#modal-content")
+		anchor1.hxTrigger("click")
+		anchor1.data("bs-toggle", "modal")
+		anchor1.data("bs-target", "#modal-container")
+		anchor1.add(Icon.cls("bi bi-pencil"))
+		anchor1.attr("title", "Edit")
+		
+		Dim anchor2 As Tag = Anchor.cls("delete text-danger mx-2").up(td3)
+		anchor2.hxGet($"/api/products/delete/${id}"$)
+		anchor2.hxTarget("#modal-content")
+		anchor2.hxTrigger("click")
+		anchor2.data("bs-toggle", "modal")
+		anchor2.data("bs-target", "#modal-container")
+		anchor2.add(Icon.cls("bi bi-trash3"))
+		anchor2.attr("title", "Delete")
+
+		tr1.up(tbody1)
+	Next
+	
+	Log($"	====================================
+				Test 6
+	===================================="$)
+	Log(tbody1.Build)
 End Sub
 
 Sub GenerateHtml As String
