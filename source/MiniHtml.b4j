@@ -108,26 +108,26 @@ Private Sub Test3
 End Sub
 
 Private Sub Test4
-	Dim D1 As Tag = Div.cls("test")
-	'Dim PT As Tag = Paragraph.init
-	Dim PT As Tag = Paragraph.init '.up(D1)
+	Dim Temp As Tag = Paragraph.init ' <p></p>
+	Dim M1 As Map = CreateMap("Temp": Temp)
+
+	Dim D1 As Tag = Div.init
 	
-	Dim M1 As Map = CreateMap("PT": PT)
+	Dim P1 As Tag = M1.Get("Temp")
+	Dim P1 As Tag = M1.Get("Temp").As(Tag).Clone
+	P1.text("Demo 1").up(D1)
 	
-	'Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
-	'Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
+	Dim P2 As Tag = M1.Get("Temp")
+	Dim P2 As Tag = M1.Get("Temp").As(Tag).Clone
+	P2.text("Demo 2").up(D1)
 	
-	'Dim P1 As Tag = PT.Clone.text("Demo 1").up(D1)
-	'Dim P2 As Tag = PT.Clone.text("Demo 2").up(D1)
-	'D1.PrintMe
-	Dim P1 As Tag = M1.Get("PT").As(Tag).Clone.text("Demo 1").up(D1)
-	Dim P2 As Tag = M1.Get("PT").As(Tag).Clone.text("Demo 2").up(D1)
-	'P1.PrintMe
-	'P2.PrintMe
-	Dim PT2 As Tag =  M1.Get("PT")
-	PT2.PrintMe
-	'D1.PrintMe
-	'PT.PrintMe
+	Dim PT2 As Tag = M1.Get("Temp")
+	Log(PT2.Build)
+	
+	' Log 1 (without Clone) : <p>Demo 1Demo 2
+	' </p>
+	
+	' Log 2 (with Clone)    : <p></p>
 End Sub
 
 Public Sub Test
