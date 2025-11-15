@@ -83,8 +83,9 @@ Sub AppStart (Args() As String)
 	Dim doc As Document
 	doc.Initialize
 	doc.AppendDocType
-	Test5
-	Test6
+	'Test5
+	'Test6
+	Test8
 	'doc.Append(GenerateHtml)
 	'File.WriteString(File.DirApp, "index.html", doc.ToString)
 	'StartMessageLoop
@@ -332,6 +333,49 @@ Private Sub Test6
 	===================================="$)
 	Log(tbody1.Build)
 End Sub
+
+Private Sub Test7 ' Magma
+	Dim trTemplate As Tag
+	trTemplate.Initialize("tr")
+
+	Dim trRow1 As Tag = trTemplate.Clone
+	trRow1.add(Html.create("td").text("1"))
+	trRow1.add(Html.create("td").text("AAA"))
+	trRow1.add(Html.create("td").text("0001"))
+
+
+	Dim trRow2 As Tag = trTemplate.Clone
+	trRow1.add(Html.create("td").text("2"))
+	trRow1.add(Html.create("td").text("bbb"))
+	trRow1.add(Html.create("td").text("0002"))
+    
+	Log(trRow1.Build)
+	Log(trRow2.Build)
+End Sub
+
+Private Sub Test8 ' Magma (edited)
+	Dim trTemplate As Tag
+	trTemplate = Tr.init
+	Td.up(trTemplate)
+	Td.up(trTemplate)
+	Td.up(trTemplate)
+
+	Dim Cache As Map = CreateMap("trTemplate": trTemplate)
+		
+	Dim Data As List = Array(CreateMap("name": "AAA"), CreateMap("name": "BBB"), CreateMap("name": "CCC"))
+
+	Dim tbody1 As Tag = Tbody.init
+	For Each item As Map In Data
+		Dim trRow1 As Tag = Cache.Get("trTemplate").As(Tag).Clone
+		trRow1.Child(1).text(item.Get("name"))
+		'trRow1.Child(1).text2(item.Get("name"))
+		LogColor(trRow1.Build, -16776961)
+		trRow1.up(tbody1)
+	Next
+	
+	LogColor(tbody1.Build, -65536)
+End Sub
+
 
 Sub GenerateHtml As String
 	Dim html1 As Tag = Html.lang("en")
