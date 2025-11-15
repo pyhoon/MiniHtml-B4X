@@ -909,3 +909,48 @@ Public Sub hxOn (event As String, value As String) As Tag
 	mAttributes.Put("hx-on:" & event, value)
 	Return Me
 End Sub
+
+
+Public Sub DeepCloneTag(originalTag As Tag) As Tag
+	Dim newTag As Tag
+	newTag.Initialize(originalTag.TagName)
+	
+	' copy attributes
+	Dim originalAttributes As Map = originalTag.Attributes
+	For Each key As String In originalAttributes.Keys
+		Dim value As String = originalAttributes.Get(key)
+		newTag.Attributes.Put(key, value)
+	Next
+	
+	' copy styles
+	Dim styleString As String = originalTag.StylesAsString
+	If styleString.Length > 0 Then
+		newTag.addStyle(styleString)
+	End If
+	
+	' copy classes
+	Dim classString As String = originalTag.ClassesAsString
+	If classString.Length > 0 Then
+		newTag.addClass(classString)
+	End If
+	
+	' copy mode, flat, indentString
+	newTag.Mode = originalTag.Mode
+	newTag.Flat = originalTag.Flat
+	
+	' Deep clone all children ?
+	Dim originalChildren As List = originalTag.Children
+	For i = 0 To originalChildren.Size - 1
+		Dim Child1 As Object = originalChildren.Get(i)
+		If Child1 Is Tag Then
+			' if tag: recursive deep clone
+			Dim clonedChild As Tag = DeepCloneTag(Child1)
+			newTag.add(clonedChild)
+		Else
+			' if string just add..
+			newTag.Children.Add(Child1)
+		End If
+	Next
+	
+	Return newTag
+End Sub

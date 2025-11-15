@@ -145,6 +145,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=Main,Process_Globals,14,0,Tag,Class_Globals,20,0,Tag,text,246,0,Tag,cdnStyle2,245,0,Tag,text2,256,0
+NavigationStack=Main,Process_Globals,14,0,Tag,text,246,0,Tag,cdnStyle2,245,0,Tag,text2,256,0,Tag,cdnScript2,256,0,Tag,Class_Globals,11,0,Tag,hxBoost,876,0,Tag,hxExt,883,0,Tag,hxOn,906,0,Tag,DeepCloneTag,943,6,Main,Test8,296,0
 SelectedBuild=0
 VisibleModules=39
