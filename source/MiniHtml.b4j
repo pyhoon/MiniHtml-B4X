@@ -361,18 +361,18 @@ Private Sub Test8 ' Magma (edited)
 	Td.up(trTemplate)
 
 	Dim Cache As Map = CreateMap("trTemplate": trTemplate)
-		
+        
 	Dim Data As List = Array(CreateMap("name": "AAA"), CreateMap("name": "BBB"), CreateMap("name": "CCC"))
 
 	Dim tbody1 As Tag = Tbody.init
 	For Each item As Map In Data
-		Dim trRow1 As Tag = Cache.Get("trTemplate").As(Tag).Clone
-		trRow1.Child(1).text(item.Get("name"))
-		'trRow1.Child(1).text2(item.Get("name"))
+		' Χρησιμοποίησε DeepCloneTag αντί απλού Clone
+		Dim trRow1 As Tag =  Cache.Get("trTemplate").As(Tag).DeepCloneTag(Cache.Get("trTemplate").As(Tag))
+		trRow1.Child(1).text2(item.Get("name")) ' χρησιμοποίησε text2 για να εξασφαλίσεις ότι αντικαθιστάς μόνο το text
 		LogColor(trRow1.Build, -16776961)
 		trRow1.up(tbody1)
 	Next
-	
+    
 	LogColor(tbody1.Build, -65536)
 End Sub
 
