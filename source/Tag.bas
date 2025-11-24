@@ -816,6 +816,21 @@ Public Sub required As Tag
 	Return Me
 End Sub
 
+Public Sub disabled As Tag
+	mAttributes.Put("disabled", "")
+	Return Me
+End Sub
+
+Public Sub checked As Tag
+	mAttributes.Put("checked", "")
+	Return Me
+End Sub
+
+Public Sub selected As Tag
+	mAttributes.Put("selected", "")
+	Return Me
+End Sub
+
 Public Sub hxGet (url As String) As Tag
 	mAttributes.Put("hx-get", url)
 	Return Me
