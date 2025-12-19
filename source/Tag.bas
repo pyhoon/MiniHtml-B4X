@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private mIndentString As String
 	Private mFlat As Boolean
 	Private mLineFeed As Boolean
+	Private mFormatAttributes As Boolean
 	Private mParent As Tag
 	Private mChildren As List
 	Private mSiblings As List
@@ -88,6 +89,8 @@ End Sub
 Public Sub BuildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 	Dim SB As StringBuilder
 	SB.Initialize
+	Dim sIndent As String
+	Dim sSpacing As String
 	Dim SpecialTags As List = Array As String("html", "head", "body")
 	'Log("mTagName=" & mTagName & ", LF=" & mLineFeed)' & ", Line1CRLF=" & Line1CRLF)
 	'If Line1CRLF Then
@@ -98,23 +101,57 @@ Public Sub BuildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 	Else
 		indent = -1
 	End If
+	
+	' Build Left Indent
+	Dim SB2 As StringBuilder
+	SB2.Initialize
+	For n = 0 To indent
+		SB2.Append(mIndentString)
+	Next
+	sIndent = SB2.ToString
+	
 	If SpecialTags.IndexOf(mTagName) < 0 Then
-		For n = 0 To indent
-			SB.Append(mIndentString)
-		Next
+		'For n = 0 To indent
+		'	SB.Append(mIndentString)
+		'Next
+		SB.Append(sIndent)
 	End If
 	If mMode <> "" Then
 		SB.Append("<" & mTagName)
 	End If
+	Dim MoreThanOne As Boolean
+	Dim Separator As String = " "
+	
+	Dim SB3 As StringBuilder
+	SB3.Initialize
+	For n = 0 To mTagName.Length + 1
+		SB3.Append(Separator)
+	Next
+	sSpacing = SB3.ToString
+	
 	For Each key As String In mAttributes.Keys
 		'Log(key & "->" & mAttributes.Get(key))
 		Dim attrs As String = mAttributes.Get(key)
+		'If mFlat = False And MoreThanOne And mFormatAttributes Then
+		' Print each attribute on each line
+			
+		'End If
+		
+		SB.Append(Separator)
+		SB.Append(key)
 		If attrs.Length > 0 Then
-			SB.Append($" ${key}=${QUOTE}"$)
+			SB.Append("=")
+			SB.Append(QUOTE)
 			SB.Append(attrs)
 			SB.Append(QUOTE)
-		Else
-			SB.Append($" ${key}"$)
+		End If
+		
+		If MoreThanOne = False Then
+			If mFlat = False And mFormatAttributes Then
+				Separator = CRLF & sIndent & sSpacing
+				Log(mTagName & sIndent & "[" & sSpacing & "]newtag")
+			End If
+			MoreThanOne = True
 		End If
 	Next
 	Select mMode
@@ -124,6 +161,7 @@ Public Sub BuildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 		Case mUniline, mMultiline, mMeta
 			SB.Append(">")
 	End Select
+	'Dim IsSibling As Boolean
 	For Each tagOrString In mChildren
 		If tagOrString Is Tag Then
 			Dim mCurrent As Tag = tagOrString
@@ -135,40 +173,51 @@ Public Sub BuildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 '						SB.Append(mCurrent.Build) ' stay on same line
 '					End If
 '				Case Else
-					'Log(mCurrent.TagName & " " & mCurrent.LineFeed)
-					'If mLineFeed Then
-					'	SB.Append(mCurrent.BuildImpl(indent + 1, False))
-						'SB.Append(mCurrent.BuildImpl(indent + 1, True, False))
-						'SB.Append(mCurrent.Build2(indent + 1))
-					'Else						
-						'SB.Append(mCurrent.Build)
-						'Log("mCurrent=" & mCurrent.TagName & ", LF=" & mCurrent.LineFeed)
-						SB.Append(mCurrent.BuildImpl(indent + 1, False))
-						'SB.Append(mCurrent.BuildImpl(-1, False))
-						'SB.Append(mCurrent.BuildImpl(-1, False, False))
-					'End If
+			'Log(mCurrent.TagName & " " & mCurrent.LineFeed)
+			'If mLineFeed Then
+			'	SB.Append(mCurrent.BuildImpl(indent + 1, False))
+			'SB.Append(mCurrent.BuildImpl(indent + 1, True, False))
+			'SB.Append(mCurrent.Build2(indent + 1))
+			'Else
+			'SB.Append(mCurrent.Build)
+			'Log("mCurrent=" & mCurrent.TagName & ", LF=" & mCurrent.LineFeed)
+			'If IsSibling Then
+			'	SB.Append(mCurrent.BuildImpl(indent, False))
+			'Else
+			SB.Append(mCurrent.BuildImpl(indent + 1, False))
+			'End If
+			'SB.Append(mCurrent.BuildImpl(-1, False))
+			'SB.Append(mCurrent.BuildImpl(-1, False, False))
+			'End If
 '			End Select
 		Else
+			'For n = 0 To indent
+			'	SB.Append(mIndentString)
+			'Next
+			'SB.Append(sIndent)
 			SB.Append(tagOrString)
 		End If
+		'IsSibling = True
 	Next
 	Select mMode
 		Case mUniline
 			If mChildren.Size > 1 Then
 				SB.Append(CRLF)
 				If SpecialTags.IndexOf(mTagName) < 0 Then
-					For n = 0 To indent
-						SB.Append(mIndentString)
-					Next
+					'For n = 0 To indent
+					'	SB.Append(mIndentString)
+					'Next
+					SB.Append(sIndent)
 				End If
 			End If
 			SB.Append("</" & mTagName & ">")
 		Case mMultiline
 			SB.Append(CRLF)
-			If specialtags.IndexOf(mTagName) < 0 Then
-				For n = 0 To indent
-					SB.Append(mIndentString)
-				Next
+			If SpecialTags.IndexOf(mTagName) < 0 Then
+				'For n = 0 To indent
+				'	SB.Append(mIndentString)
+				'Next
+				SB.Append(sIndent)
 			End If
 			SB.Append("</" & mTagName & ">")
 	End Select
@@ -251,15 +300,15 @@ Public Sub PrintChildren
 	Next
 End Sub
 
-' Add comment on new line
-Public Sub comment (value As String) As Tag
-	mChildren.Add(Html.create(mNoTag))
+' Add comment on same line
+Public Sub comment2 (value As String) As Tag
 	mChildren.Add($"<!--${value}-->"$)
 	Return Me
 End Sub
 
-' Add comment on same line
-Public Sub comment2 (value As String) As Tag
+' Add comment on new line
+Public Sub comment (value As String) As Tag
+	mChildren.Add(Html.create(mNoTag))
 	mChildren.Add($"<!--${value}-->"$)
 	Return Me
 End Sub
@@ -878,6 +927,13 @@ Public Sub getLineFeed As Boolean
 	Return mLineFeed
 End Sub
 
+' Set FormatAttributes
+Public Sub setFormatAttributes (Value As Boolean)
+	mFormatAttributes = Value
+End Sub
+Public Sub getFormatAttributes As Boolean
+	Return mFormatAttributes
+End Sub
 
 'Set uniline mode
 Public Sub uniline As Tag
