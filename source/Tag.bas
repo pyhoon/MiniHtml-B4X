@@ -6,7 +6,7 @@ Version=4.5
 @EndOfDesignText@
 ' Created by: Aeric
 ' Credit to:  EnriqueGonzalez
-' Version: 0.70
+' Version: 0.80
 Sub Class_Globals
 	Private mId As String
 	Private mName As String
@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private mTagName As String
 	Private mIndentString As String
 	Private mFlat As Boolean
+	Private mLineFeed As Boolean
 	Private mParent As Tag
 	Private mChildren As List
 	Private mSiblings As List
@@ -22,9 +23,9 @@ Sub Class_Globals
 	Private mClasses As List
 	Private Const mNoTag     As String = ""
 	Private Const mMeta      As String = "meta"		' <meta>
-	Private Const mLink      As String = "link"		' <tag />
+	Private Const mSelf      As String = "self"		' <tag />
 	Private Const mUniline   As String = "uniline" 	' <tag></tag>
-	Private Const mMultiline As String = "multiline"	' <tag> CRLF </tag>
+	Private Const mMultiline As String = "multiline"' <tag> CRLF </tag>
 End Sub
 
 ' Initialize tag with tagName
@@ -36,18 +37,20 @@ Public Sub Initialize (tagName As String) As Tag
 	mStyles.Initialize
 	mClasses.Initialize
 	mFlat = False
+	mLineFeed = True
 	mId = ""
 	mName = ""
 	mTagName = tagName
 	Select mTagName.ToLowerCase
 		Case "head", "form", "table"
 			mMode = mMultiline
-		Case "meta", "input"
+		Case "meta", "input", "link"
 			mMode = mMeta
 		Case "title", "h1", "h2", "h3", "h4", "h5", "p", "script", "label", "button", "span", "li", "a", "i", "b", "u", "option", "bold", "italic", "underline", "strong", "em", "del", "th", "td", "small", "textarea"
 			mMode = mUniline
-		Case "img", "link", "br"
-			mMode = mLink
+			'mLineFeed = False
+		Case "img", "br"', "link"
+			mMode = mSelf ' self closing tag
 		Case "text", ""
 			mMode = mNoTag
 		Case Else
@@ -57,32 +60,50 @@ Public Sub Initialize (tagName As String) As Tag
 	Return Me
 End Sub
 
-' No indent no CRLF
+' No indent
+' No CRLF
+' No align attributes
 Public Sub Build As String
-	Return Build3(-1, False)
+	'Return BuildImpl(-1, False, False)
+	Return BuildImpl(-1, False)
 End Sub
 
 ' No indent with CRLF
-Public Sub Build2 As String
-	Return Build3(-1, True)
+'Public Sub Build2 (Line1CRLF As Boolean) As String
+'	Return BuildImpl(-1, Line1CRLF, False)
+'End Sub
+
+' Custom indent
+' With CRLF on first line
+' No align attributes
+Public Sub Build2 (indent As Int) As String
+	'Return BuildImpl(indent, True, False)
+	Return BuildImpl(indent, False)
 End Sub
 
-' Indent with CRLF
-Public Sub Build4 (indent As Int) As String
-	Return Build3(indent, True)
-End Sub
-
-' Indent and first CRLF optional
-Public Sub Build3 (indent As Int, Line1CRLF As Boolean) As String
+' Custom indent
+' With CRLF on first line
+' With alignment of second attribute onwards according to tag name length
+'Public Sub BuildImpl (indent As Int, Line1CRLF As Boolean, AlignAttribute2 As Boolean) As String
+Public Sub BuildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 	Dim SB As StringBuilder
 	SB.Initialize
-	If Line1CRLF Then
+	Dim SpecialTags As List = Array As String("html", "head", "body")
+	'Log("mTagName=" & mTagName & ", LF=" & mLineFeed)' & ", Line1CRLF=" & Line1CRLF)
+	'If Line1CRLF Then
+	'	SB.Append(CRLF)
+	'End If
+	If mLineFeed Then
 		SB.Append(CRLF)
+	Else
+		indent = -1
 	End If
-	For n = 0 To indent
-		SB.Append(mIndentString)
-	Next
-	If Not(mMode = "") Then
+	If SpecialTags.IndexOf(mTagName) < 0 Then
+		For n = 0 To indent
+			SB.Append(mIndentString)
+		Next
+	End If
+	If mMode <> "" Then
 		SB.Append("<" & mTagName)
 	End If
 	For Each key As String In mAttributes.Keys
@@ -97,7 +118,7 @@ Public Sub Build3 (indent As Int, Line1CRLF As Boolean) As String
 		End If
 	Next
 	Select mMode
-		Case mLink
+		Case mSelf
 			'If mFlat = False Then SB.Append(" ")
 			SB.Append("/>")
 		Case mUniline, mMultiline, mMeta
@@ -106,16 +127,27 @@ Public Sub Build3 (indent As Int, Line1CRLF As Boolean) As String
 	For Each tagOrString In mChildren
 		If tagOrString Is Tag Then
 			Dim mCurrent As Tag = tagOrString
-			Select mCurrent.TagName
-				Case "span", "strong", "small", "em", "b", "u", "textarea"
-					SB.Append(mCurrent.Build) ' stay on same line
-				Case Else
-					If mTagName = "textarea" Then
-						SB.Append(mCurrent.Build)
-					Else
-						SB.Append(mCurrent.Build3(indent + 1, True))
-					End If
-			End Select
+'			Select mCurrent.TagName
+'				Case "span", "strong", "small", "em", "b", "u", "textarea"
+'					If mLineFeed Then
+'						SB.Append(mCurrent.Build2(indent + 1))
+'					Else
+'						SB.Append(mCurrent.Build) ' stay on same line
+'					End If
+'				Case Else
+					'Log(mCurrent.TagName & " " & mCurrent.LineFeed)
+					'If mLineFeed Then
+					'	SB.Append(mCurrent.BuildImpl(indent + 1, False))
+						'SB.Append(mCurrent.BuildImpl(indent + 1, True, False))
+						'SB.Append(mCurrent.Build2(indent + 1))
+					'Else						
+						'SB.Append(mCurrent.Build)
+						'Log("mCurrent=" & mCurrent.TagName & ", LF=" & mCurrent.LineFeed)
+						SB.Append(mCurrent.BuildImpl(indent + 1, False))
+						'SB.Append(mCurrent.BuildImpl(-1, False))
+						'SB.Append(mCurrent.BuildImpl(-1, False, False))
+					'End If
+'			End Select
 		Else
 			SB.Append(tagOrString)
 		End If
@@ -124,16 +156,20 @@ Public Sub Build3 (indent As Int, Line1CRLF As Boolean) As String
 		Case mUniline
 			If mChildren.Size > 1 Then
 				SB.Append(CRLF)
-				For n = 0 To indent
-					SB.Append(mIndentString)
-				Next
+				If SpecialTags.IndexOf(mTagName) < 0 Then
+					For n = 0 To indent
+						SB.Append(mIndentString)
+					Next
+				End If
 			End If
 			SB.Append("</" & mTagName & ">")
 		Case mMultiline
 			SB.Append(CRLF)
-			For n = 0 To indent
-				SB.Append(mIndentString)
-			Next
+			If specialtags.IndexOf(mTagName) < 0 Then
+				For n = 0 To indent
+					SB.Append(mIndentString)
+				Next
+			End If
 			SB.Append("</" & mTagName & ">")
 	End Select
 	Return SB.ToString
@@ -573,20 +609,24 @@ Public Sub addAction (value As String) As Tag
 End Sub
 
 'Add link tag with only href
-Public Sub addLink (href As String, rel As String, integrity As String, crossorigin As String) As Tag
-	Return addLink3(href, rel, integrity, crossorigin, "", "", "")
+Public Sub addLink (rel As String, href As String, integrity As String, crossorigin As String) As Tag
+	Return addLink3(rel, href, integrity, crossorigin, "", "", "")
 End Sub
 
+'Add link tag (child)
 Public Sub addLink2 (keyvals As Map) As Tag
-	mChildren.Add(Html.create("link").attr2(keyvals))
-	Return Me
+	'mChildren.Add(Html.create("link").attr2(keyvals))
+	'Return Me
+	Dim newtag As Tag = Html.create("link").attr2(keyvals)
+	mChildren.Add(newtag)
+	Return newtag
 End Sub
 
-Public Sub addLink3 (href As String, rel As String, integrity As String, crossorigin As String, titleText As String, typeText As String, asText As String) As Tag
+Public Sub addLink3 (rel As String, href As String, integrity As String, crossorigin As String, titleText As String, typeText As String, asText As String) As Tag
 	Dim Map1 As Map
 	Map1.Initialize
-	If href <> "" Then Map1.Put("href", href)
 	If rel <> "" Then Map1.Put("rel", rel)
+	If href <> "" Then Map1.Put("href", href)
 	If integrity <> "" Then Map1.Put("integrity", integrity)
 	If crossorigin <> "" Then Map1.Put("crossorigin", crossorigin)
 	If titleText <> "" Then Map1.Put("title", titleText)
@@ -693,13 +733,44 @@ Public Sub name (value As String) As Tag
 	Return Me
 End Sub
 
-'Set data- attribute
+'Set data-key attribute
 Public Sub data (key As String, value As Object) As Tag
 	mAttributes.Put("data-" & key, value)
 	Return Me
 End Sub
 
-'Set aria- attribute
+'Set data-bs-key attribute
+Public Sub databs (key As String, value As Object) As Tag
+	Return data("bs-" & key, value)
+End Sub
+
+'Set x-key attribute
+Public Sub x (key As String, value As Object) As Tag
+	mAttributes.Put("x-" & key, value)
+	Return Me
+End Sub
+
+'Set x-data attribute
+Public Sub xdata (value As Object) As Tag
+	Return x("data", value)
+End Sub
+
+'Set x-model attribute
+Public Sub xmodel (value As Object) As Tag
+	Return x("model", value)
+End Sub
+
+'Set x-show attribute
+Public Sub xshow (value As Object) As Tag
+	Return x("show", value)
+End Sub
+
+'Set x-text attribute
+Public Sub xtext (value As Object) As Tag
+	Return x("text", value)
+End Sub
+
+'Set aria-key attribute
 Public Sub aria (key As String, value As Object) As Tag
 	mAttributes.Put("aria-" & key, value)
 	Return Me
@@ -761,17 +832,17 @@ End Sub
 
 'Add link tag with only href
 Public Sub link (href As String) As Tag
-	Return addLink(href, "", "", "")
+	Return addLink("", href, "", "")
 End Sub
 
-'Add link tag with href and rel
-Public Sub link2 (href As String, rel As String) As Tag
-	Return addLink(href, rel, "", "")
+'Add link tag with rel and href
+Public Sub link2 (rel As String, href As String) As Tag
+	Return addLink(rel, href, "", "")
 End Sub
 
 'Add link with rel="stylesheet"
 Public Sub linkCss (href As String) As Tag
-	Return addLink(href, "stylesheet", "", "")
+	Return addLink("stylesheet", href, "", "")
 End Sub
 
 'Add link with rel="icon"
@@ -798,6 +869,15 @@ End Sub
 Public Sub getMode As String
 	Return mMode
 End Sub
+
+'Set LineFeed
+Public Sub setLineFeed (Value As Boolean)
+	mLineFeed = Value
+End Sub
+Public Sub getLineFeed As Boolean
+	Return mLineFeed
+End Sub
+
 
 'Set uniline mode
 Public Sub uniline As Tag
@@ -926,7 +1006,7 @@ Public Sub hxOn (event As String, value As String) As Tag
 End Sub
 
 
-Public Sub DeepCloneTag(originalTag As Tag) As Tag
+Public Sub DeepCloneTag (originalTag As Tag) As Tag
 	Dim newTag As Tag
 	newTag.Initialize(originalTag.TagName)
 	
