@@ -149,7 +149,7 @@ Public Sub BuildImpl (indent As Int, AlignAttribute2 As Boolean) As String
 		If MoreThanOne = False Then
 			If mFlat = False And mFormatAttributes Then
 				Separator = CRLF & sIndent & sSpacing
-				Log(mTagName & sIndent & "[" & sSpacing & "]newtag")
+				'Log(mTagName & sIndent & "[" & sSpacing & "]newtag")
 			End If
 			MoreThanOne = True
 		End If
