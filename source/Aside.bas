@@ -6,7 +6,7 @@ Version=10.3
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "footer"
+	Private Const tagname As String = "aside"
 End Sub
 
 Public Sub init As Tag
@@ -49,9 +49,4 @@ End Sub
 'Add one or more styles separated by semicolon
 Public Sub sty (value As String) As Tag
 	Return init.sty(value)
-End Sub
-
-'Set x-key attribute
-Public Sub x (key As String, value As Object) As Tag
-	Return init.x(key, value)
 End Sub

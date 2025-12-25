@@ -6,7 +6,7 @@ Version=10.3
 @EndOfDesignText@
 
 Private Sub Process_Globals
-	Private Const tagname As String = "footer"
+	Private Const tagname As String = "header"
 End Sub
 
 Public Sub init As Tag
