@@ -95,8 +95,11 @@ Public Sub Parse (HtmlText As String) As Tag
 	Dim parser As MiniHtmlParser
 	parser.Initialize
 	Dim node1 As HtmlNode = parser.Parse(HtmlText)
-	If node1.Children.Size = 1 Then
-		root1 = ConvertToTag(node1.Children.Get(0))
-	End If
+	For Each child As HtmlNode In node1.Children
+		' Skip text tag
+		If child.Name.EqualsIgnoreCase("text") = False Then
+			root1 = ConvertToTag(child)
+		End If
+	Next
 	Return root1
 End Sub
