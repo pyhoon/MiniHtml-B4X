@@ -1,6 +1,6 @@
 # MiniHtml-B4X
  Generate HTML from B4X code \
- Supports HTMX hx-* attributes
+ Supports HTMX hx-* and AlpineJS x-* attributes
 
 ### Preview
 ![MiniHTML](../main/MiniHTML.png)
