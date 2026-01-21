@@ -6,7 +6,7 @@ Version=4.5
 @EndOfDesignText@
 ' Created by: Aeric
 ' Credits to: EnriqueGonzalez, Magma
-' Version: 0.90
+' Version: 1.00
 Sub Class_Globals
 	Private mId As String
 	Private mName As String
