@@ -4,9 +4,10 @@ ModulesStructureVersion=1
 Type=Class
 Version=4.5
 @EndOfDesignText@
+' MiniHtml
+' Version: 1.00
 ' Created by: Aeric
 ' Credits to: EnriqueGonzalez, Magma
-' Version: 1.00
 Sub Class_Globals
 	Private mId As String
 	Private mName As String
@@ -582,18 +583,20 @@ Public Sub attr3 (key As String) As Tag
 End Sub
 
 'Add attributes by passing a json object
-Public Sub attr4 (json As String) As Tag
-	Try
-		Dim keyvals As Map = json.As(JSON).ToMap
-		For Each key As String In keyvals.Keys
-			Dim value As String = keyvals.Get(key)
-			mAttributes.Put(key, value)
-		Next
-	Catch
-		Log(LastException)
-	End Try
-	Return Me
-End Sub
+'Public Sub attr4 (json As String) As Tag
+'	' Temporary removed due to lack of usage
+'	' so we can temporary remove the JSON library dependency
+'	Try
+'		Dim keyvals As Map = json.As(JSON).ToMap
+'		For Each key As String In keyvals.Keys
+'			Dim value As String = keyvals.Get(key)
+'			mAttributes.Put(key, value)
+'		Next
+'	Catch
+'		Log(LastException)
+'	End Try
+'	Return Me
+'End Sub
 
 'Add attributes by passing a json object
 'Public Sub setAttributesFromJson (json As String) As Tag

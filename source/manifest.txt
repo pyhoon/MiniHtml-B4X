@@ -1,6 +1,4 @@
 Author=Aeric
 Version=1.00
-B4J.DependsOn=Json,B4XCollections
-B4i.DependsOn=iJSON,B4XCollections
-B4A.DependsOn=JSON,B4XCollections
+DependsOn=B4XCollections
 CustomClassTemplates=MiniHtml View (Main)|MainView

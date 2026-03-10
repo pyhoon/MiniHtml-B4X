@@ -4,6 +4,8 @@ ModulesStructureVersion=1
 Type=Class
 Version=10
 @EndOfDesignText@
+' MiniHtml
+' Version: 1.00
 Sub Class_Globals
 	Private mFlat         As Boolean
 	Private mBuilder      As StringBuilder

@@ -3,7 +3,6 @@ Build1=Default,b4j.example
 Group=App
 Library1=b4xcollections
 Library2=jcore
-Library3=json
 Module1=Anchor
 Module10=Document
 Module11=Dropdown
@@ -56,7 +55,7 @@ Module7=Caption
 Module8=Del
 Module9=Div
 NumberOfFiles=0
-NumberOfLibraries=3
+NumberOfLibraries=2
 NumberOfModules=51
 Version=10.3
 @EndOfDesignText@
@@ -66,10 +65,10 @@ Version=10.3
 #End Region
 #Region Macros
 '#Macro: Title, Export as zip, ide://run?file=%B4X%\Zipper.jar&Args=%PROJECT_NAME%.zip
-#Macro: Title, Update Version, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%&Args=%PROJECT%&Args=Version&Args=1.00
-#Macro: Title, Create B4xLib, ide://run?file=%JAVABIN%\jar.exe&WorkingDirectory=..&args=-cMf&args=..\prerelease\%PROJECT_NAME%.b4xlib&args=*.bas&args=MainView.b4x_excluded&args=manifest.txt&args=LICENSE&args=Snippets
+#Macro: Title, Update Manifest, ide://run?file=%JAVABIN%\java.exe&Args=-jar&Args=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%&Args=%PROJECT%&Args=Author&Args=Aeric&Args=Version&Args=1.00&Args=B4A.DependsOn&Args=-&Args=B4i.DependsOn&Args=-&Args=B4J.DependsOn&Args=-&Args=DependsOn&Args=B4XCollections&Args=CustomClassTemplates&Args=-&Args=CustomClassTemplates&Args=MiniHtml+View+(Main)|MainView
+#Macro: Title, Create B4xLib, ide://run?file=%JAVABIN%\jar.exe&WorkingDirectory=..&Args=-cMf&Args=..\prerelease\%PROJECT_NAME%.b4xlib&Args=*.bas&Args=manifest.txt&Args=LICENSE&Args=Snippets
 #Macro: Title, Prerelease folder, ide://run?file=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\prerelease
-#Macro: Title, Copy to AddLibs, ide://run?file=%COMSPEC%&args=/c&args=copy&args=%PROJECT%\..\prerelease\*.b4xlib&args=%ADDITIONAL%\..\B4X
+#Macro: Title, Copy to AddLibs, ide://run?file=%COMSPEC%&Args=/c&Args=copy&Args=%PROJECT%\..\prerelease\*.b4xlib&Args=%ADDITIONAL%\..\B4X
 #End Region
 Sub Process_Globals
 	Private HtmlParser 			As MiniHtmlParser
